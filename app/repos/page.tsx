@@ -1,6 +1,6 @@
 import RepoList from "./components/repo-list";
 
-function Dashboard() {
+function RepoListPage() {
   return (
     <main className="p-8">
       <RepoList />
@@ -8,4 +8,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default RepoListPage;

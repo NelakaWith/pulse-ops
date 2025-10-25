@@ -5,11 +5,13 @@ import { useGithub } from "@/hooks/use-github";
 function RepoList() {
   const { data, loading, error } = useGithub("users/NelakaWith/repos");
   return (
-    <section>
+    <section className="w-full">
       {loading && (
-        <div className="grid grid-cols-3 gap-4 mt-4">
-          {Array.from({ length: 9 }).map((_, index) => (
-            <Skeleton key={index} className="h-[250px] rounded-xl" />
+        <div className="grid grid-cols-3 gap-4 mt-4 w-full">
+          {Array.from({ length: 12 }).map((_, index) => (
+            <div className="flex flex-col space-y-3" key={index}>
+              <Skeleton className="h-[200px] w-[500px] rounded-xl" />
+            </div>
           ))}
         </div>
       )}

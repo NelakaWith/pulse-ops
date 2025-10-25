@@ -1,9 +1,9 @@
-import Dashboard from "./dashboard/page";
+import RepoListPage from "./repos/page";
 
 export default function Home() {
   return (
     <>
-      <Dashboard />
+      <RepoListPage />
     </>
   );
 }
