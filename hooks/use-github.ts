@@ -10,7 +10,9 @@ import axios from "axios";
 export function useGithub(endpoint?: string | null) {
   const [data, setData] = useState<unknown>(null);
   const [error, setError] = useState<Error | null>(null);
-  const [loading, setLoading] = useState(false);
+  // initialize loading to true when an endpoint is provided so skeletons
+  // render immediately on mount rather than briefly showing an empty state
+  const [loading, setLoading] = useState<boolean>(!!endpoint);
 
   const fetcher = useCallback(async (ep?: string | null) => {
     if (!ep) return;
