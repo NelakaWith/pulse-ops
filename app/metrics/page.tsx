@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import { useGraphQL } from "@/hooks/use-graphql";
 import UserMetrics from "./components/userMetrics";
+import ContributionChart from "./components/contributionChart";
 
 type Count = { totalCount: number } | null | undefined;
 
@@ -103,7 +104,16 @@ export default function MetricsPage() {
   return (
     <main className="p-8">
       <h1 className="text-2xl font-bold mb-4">Metrics</h1>
-      <UserMetrics user={user} loading={loading} error={error} data={data} />
+      <div className="space-y-6">
+        <UserMetrics user={user} loading={loading} error={error} data={data} />
+        {user?.contributionsCollection?.contributionCalendar && (
+          <ContributionChart
+            contributionCalendar={
+              user.contributionsCollection.contributionCalendar
+            }
+          />
+        )}
+      </div>
     </main>
   );
 }
