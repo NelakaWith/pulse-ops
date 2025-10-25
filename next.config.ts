@@ -2,8 +2,17 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Allow GitHub avatar images used in the app (e.g. avatars.githubusercontent.com)
-    domains: ["avatars.githubusercontent.com"],
+    // Prefer remotePatterns to explicitly whitelist remote image sources and
+    // paths. This is safer than a broad domains list because it lets us
+    // restrict protocol/hostname/path patterns and avoid accidental host
+    // wildcards that could be abused.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        pathname: "/**",
+      },
+    ],
   },
 };
 
