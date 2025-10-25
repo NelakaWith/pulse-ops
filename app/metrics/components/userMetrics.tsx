@@ -1,6 +1,3 @@
-"use client";
-import { useMemo } from "react";
-import { useGraphQL } from "@/hooks/use-graphql";
 import Image from "next/image";
 
 type Count = { totalCount: number } | null | undefined;
@@ -23,83 +20,14 @@ type User = {
   contributionsCollection?: ContributionsCollection;
 } | null;
 
-const USER_QUERY = `
-  query User($login: String!) {
-    user(login: $login) {
-      name
-      avatarUrl
-      bio
-      followers {
-        totalCount
-      }
-      following {
-        totalCount
-      }
-      repositories(privacy: PUBLIC, first: 10, orderBy: {field: STARGAZERS, direction: DESC}) {
-        totalCount
-        nodes {
-          name
-          stargazerCount
-          forkCount
-          watchers {
-            totalCount
-          }
-          languages(first: 5, orderBy: {field: SIZE, direction: DESC}) {
-            edges {
-              size
-              node {
-                name
-                color
-              }
-            }
-          }
-        }
-      }
-      contributionsCollection {
-        totalCommitContributions
-        restrictedContributionsCount
-        pullRequestContributions(first: 1) {
-          totalCount
-        }
-        issueContributions(first: 1) {
-          totalCount
-        }
-        pullRequestReviewContributions(first: 1) {
-          totalCount
-        }
-        contributionCalendar {
-          totalContributions
-          weeks {
-            contributionDays {
-              date
-              contributionCount
-              color
-            }
-          }
-        }
-        commitContributionsByRepository(maxRepositories: 5) {
-          repository {
-            name
-          }
-          contributions {
-            totalCount
-          }
-        }
-      }
-    }
-  }
-`;
+interface UserMetricsProps {
+  user: User;
+  loading: boolean;
+  error: Error | null;
+  data: unknown;
+}
 
-function UserMetrics() {
-  const variables = useMemo(() => ({ login: "NelakaWith" }), []);
-
-  const { data, loading, error } = useGraphQL<{ user: User }>(
-    USER_QUERY,
-    variables
-  );
-
-  const user: User = data?.user ?? null;
-
+function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
   return (
     <div>
       {loading && <p>Loading metrics...</p>}
