@@ -29,13 +29,62 @@ const USER_QUERY = `
       name
       avatarUrl
       bio
-      followers { totalCount }
-      following { totalCount }
-      repositories { totalCount }
+      followers {
+        totalCount
+      }
+      following {
+        totalCount
+      }
+      repositories(privacy: PUBLIC, first: 10, orderBy: {field: STARGAZERS, direction: DESC}) {
+        totalCount
+        nodes {
+          name
+          stargazerCount
+          forkCount
+          watchers {
+            totalCount
+          }
+          languages(first: 5, orderBy: {field: SIZE, direction: DESC}) {
+            edges {
+              size
+              node {
+                name
+                color
+              }
+            }
+          }
+        }
+      }
       contributionsCollection {
         totalCommitContributions
         restrictedContributionsCount
-        contributionCalendar { totalContributions }
+        pullRequestContributions(first: 1) {
+          totalCount
+        }
+        issueContributions(first: 1) {
+          totalCount
+        }
+        pullRequestReviewContributions(first: 1) {
+          totalCount
+        }
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays {
+              date
+              contributionCount
+              color
+            }
+          }
+        }
+        commitContributionsByRepository(maxRepositories: 5) {
+          repository {
+            name
+          }
+          contributions {
+            totalCount
+          }
+        }
       }
     }
   }
@@ -53,8 +102,6 @@ export default function MetricsPage() {
 
   return (
     <main className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Metrics</h1>
-
       {loading && <p>Loading metrics...</p>}
       {error && <p className="text-red-500">Error: {error.message}</p>}
 
