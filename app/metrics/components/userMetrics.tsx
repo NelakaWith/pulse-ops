@@ -1,9 +1,18 @@
 import Image from "next/image";
+import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { FolderGit2, GitGraph } from "lucide-react";
+import { FolderGit, GitGraph, GitPullRequestArrow, Rocket } from "lucide-react";
 import type { UserMetricsProps } from "../types";
 
 function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
+  const totalReleases = useMemo(() => {
+    const nodes = user?.repositories?.nodes ?? [];
+    return nodes.reduce(
+      (sum, repo) => sum + (repo.releases?.totalCount ?? 0),
+      0
+    );
+  }, [user?.repositories?.nodes]);
+
   return (
     <>
       {loading && <p>Loading metrics...</p>}
@@ -28,7 +37,7 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
               <Card className="min-w-64 h-32">
                 <CardContent className="h-full flex flex-col justify-between">
                   <div className="flex items-center">
-                    <FolderGit2 className="inline mr-1 font-bold text-xl" />
+                    <FolderGit className="inline mr-1 font-bold text-xl" />
                   </div>
                   <div className="flex items-center justify-end text-lg ">
                     <span className="font-light me-2">Repos</span>
@@ -49,6 +58,31 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
                       {user.contributionsCollection?.totalCommitContributions ??
                         0}
                     </span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-64 h-32">
+                <CardContent className="h-full flex flex-col justify-between">
+                  <div className="flex items-center">
+                    <GitPullRequestArrow className="inline mr-1 font-bold text-xl" />
+                  </div>
+                  <div className="flex items-center justify-end text-lg ">
+                    <span className="font-light me-2">PRs</span>
+                    <span className="font-semibold">
+                      {user.contributionsCollection?.pullRequestContributions
+                        ?.totalCount ?? 0}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-64 h-32">
+                <CardContent className="h-full flex flex-col justify-between">
+                  <div className="flex items-center">
+                    <Rocket className="inline mr-1 font-bold text-xl" />
+                  </div>
+                  <div className="flex items-center justify-end text-lg ">
+                    <span className="font-light me-2">Releases</span>
+                    <span className="font-semibold">{totalReleases}</span>
                   </div>
                 </CardContent>
               </Card>

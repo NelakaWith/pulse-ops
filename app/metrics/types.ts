@@ -19,6 +19,7 @@ export type ContributionsCollection = {
   totalCommitContributions?: number | null;
   restrictedContributionsCount?: number | null;
   contributionCalendar?: ContributionCalendar;
+  pullRequestContributions?: { totalCount: number } | null;
 } | null;
 
 export type LanguageEdge = {
@@ -31,12 +32,25 @@ export type LanguageEdge = {
 
 export type Repository = {
   name: string;
+  url?: string;
+  stargazerCount?: number;
+  forkCount?: number;
+  watchers?: { totalCount: number } | null;
+  openIssues?: { totalCount: number } | null;
+  closedIssues?: { totalCount: number } | null;
+  openPullRequests?: { totalCount: number } | null;
+  mergedPullRequests?: { totalCount: number } | null;
+  closedPullRequests?: { totalCount: number } | null;
+  releases?: { totalCount: number } | null;
   languages: {
     edges: LanguageEdge[];
   };
 };
 
-export type RepositoriesData = { nodes: Repository[] } | null;
+export type RepositoriesData = {
+  totalCount?: number;
+  nodes: Repository[];
+} | null;
 
 export type User = {
   name?: string | null;
@@ -44,13 +58,7 @@ export type User = {
   bio?: string | null;
   followers?: Count;
   following?: Count;
-  repositories?: {
-    totalCount: number;
-    nodes: Array<{
-      name: string;
-      languages: { edges: LanguageEdge[] };
-    }>;
-  } | null;
+  repositories?: RepositoriesData;
   contributionsCollection?: ContributionsCollection;
 } | null;
 

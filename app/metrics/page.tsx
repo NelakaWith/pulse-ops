@@ -25,7 +25,7 @@ const USER_QUERY = `
       # --- Repositories (Top 10 by stars) ---
       repositories(
         privacy: PUBLIC
-        first: 10
+        first: 100
         orderBy: { field: STARGAZERS, direction: DESC }
       ) {
         totalCount
