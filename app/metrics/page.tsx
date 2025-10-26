@@ -22,8 +22,7 @@ const USER_QUERY = `
       following {
         totalCount
       }
-
-      # --- Repositories (Top 10 by stars) ---
+      # --- Repositories (Top results by stars) ---
       repositories(
         privacy: PUBLIC
         first: 20
@@ -32,30 +31,11 @@ const USER_QUERY = `
         totalCount
         nodes {
           name
-          url
-          stargazerCount
-          forkCount
-          watchers {
-            totalCount
-          }
-          openIssues: issues(states: OPEN) {
-            totalCount
-          }
-          closedIssues: issues(states: CLOSED) {
-            totalCount
-          }
-          openPullRequests: pullRequests(states: OPEN) {
-            totalCount
-          }
-          mergedPullRequests: pullRequests(states: MERGED) {
-            totalCount
-          }
-          closedPullRequests: pullRequests(states: CLOSED) {
-            totalCount
-          }
+          # releases total used for the Releases card
           releases {
             totalCount
           }
+          # languages used by the language usage pie chart
           languages(first: 5, orderBy: { field: SIZE, direction: DESC }) {
             edges {
               size
@@ -67,40 +47,13 @@ const USER_QUERY = `
           }
         }
       }
-
       # --- Contribution Breakdown ---
       contributionsCollection {
         totalCommitContributions
         restrictedContributionsCount
-
         pullRequestContributions(first: 100) {
           totalCount
-          nodes {
-            pullRequest {
-              state
-              merged
-              createdAt
-              mergedAt
-              closedAt
-            }
-          }
         }
-
-        issueContributions(first: 100) {
-          totalCount
-          nodes {
-            issue {
-              state
-              createdAt
-              closedAt
-            }
-          }
-        }
-
-        pullRequestReviewContributions(first: 100) {
-          totalCount
-        }
-
         contributionCalendar {
           totalContributions
           weeks {
@@ -109,15 +62,6 @@ const USER_QUERY = `
               contributionCount
               color
             }
-          }
-        }
-
-        commitContributionsByRepository(maxRepositories: 5) {
-          repository {
-            name
-          }
-          contributions {
-            totalCount
           }
         }
       }

@@ -74,7 +74,7 @@ function ContributionChart({ contributionCalendar }: ContributionChartProps) {
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-64 w-full">
+        <ChartContainer config={chartConfig} className="h-72 w-full">
           <LineChart data={chartData}>
             <CartesianGrid
               strokeDasharray="3 3"

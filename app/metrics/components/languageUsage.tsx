@@ -77,7 +77,7 @@ function LanguageUsage({ repositories }: LanguageUsageProps) {
         <CardDescription></CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="h-80 w-full">
+        <ChartContainer config={chartConfig} className="h-72 w-full">
           <PieChart>
             <Pie
               data={chartData}
