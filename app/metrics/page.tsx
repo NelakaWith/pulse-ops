@@ -15,6 +15,7 @@ const USER_QUERY = `
       company
       location
       url
+      login
       followers {
         totalCount
       }

@@ -56,6 +56,8 @@ export type User = {
   name?: string | null;
   avatarUrl?: string | null;
   bio?: string | null;
+  url?: string | null;
+  login?: string | null;
   followers?: Count;
   following?: Count;
   repositories?: RepositoriesData;

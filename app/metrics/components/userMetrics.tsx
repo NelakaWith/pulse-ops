@@ -19,20 +19,28 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
       {error && <p className="text-red-500">Error: {error.message}</p>}
 
       {user ? (
-        <div className="flex items-start gap-6">
-          <Image
-            src={user.avatarUrl ?? ""}
-            alt={user.name ?? "avatar"}
-            className="h-24 w-24 rounded-full"
-            width={96}
-            height={96}
-          />
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-4">
+            <Image
+              src={user.avatarUrl ?? ""}
+              alt={user.name ?? "avatar"}
+              className="h-24 w-24 rounded-full"
+              width={64}
+              height={64}
+            />
+            <div>
+              <h2 className="text-xl font-semibold">
+                {user.name ?? "—"}{" "}
+                <span className="text-neutral-400 font-light">
+                  @{user.login ?? "—"}
+                </span>
+              </h2>
+              {user.bio && (
+                <p className="text-sm text-muted-foreground">{user.bio}</p>
+              )}
+            </div>
+          </div>
           <div className="flex-1">
-            <h2 className="text-xl font-semibold">{user.name ?? "—"}</h2>
-            {user.bio && (
-              <p className="text-sm text-muted-foreground">{user.bio}</p>
-            )}
-
             <div className="mt-3 flex gap-4 text-sm">
               <Card className="flex-1 h-32 bg-purple-50">
                 <CardContent className="h-full flex flex-col justify-between">
