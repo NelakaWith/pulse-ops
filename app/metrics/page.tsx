@@ -25,7 +25,7 @@ const USER_QUERY = `
       # --- Repositories (Top 10 by stars) ---
       repositories(
         privacy: PUBLIC
-        first: 100
+        first: 20
         orderBy: { field: STARGAZERS, direction: DESC }
       ) {
         totalCount
@@ -126,12 +126,10 @@ const USER_QUERY = `
 
 export default function MetricsPage() {
   const variables = useMemo(() => ({ login: "NelakaWith" }), []);
-
   const { data, loading, error } = useGraphQL<{ user: User }>(
     USER_QUERY,
     variables
   );
-
   const user: User = data?.user ?? null;
 
   return (

@@ -34,55 +34,55 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
             )}
 
             <div className="mt-3 flex gap-4 text-sm">
-              <Card className="min-w-64 h-32">
+              <Card className="flex-1 h-32 bg-purple-50">
                 <CardContent className="h-full flex flex-col justify-between">
                   <div className="flex items-center">
-                    <FolderGit className="inline mr-1 font-bold text-xl" />
+                    <FolderGit className="inline mr-1 font-bold text-purple-400" />
                   </div>
-                  <div className="flex items-center justify-end text-lg ">
+                  <div className="flex items-end justify-end text-lg ">
                     <span className="font-light me-2">Repos</span>
-                    <span className="font-semibold">
+                    <span className="font-light text-6xl">
                       {user.repositories?.totalCount ?? 0}
                     </span>
                   </div>
                 </CardContent>
               </Card>
-              <Card className="min-w-64 h-32">
+              <Card className="flex-1 h-32 bg-green-50">
                 <CardContent className="h-full flex flex-col justify-between">
                   <div className="flex items-center">
-                    <GitGraph className="inline mr-1 font-bold text-xl" />
+                    <GitGraph className="inline mr-1 font-bold text-green-400" />
                   </div>
-                  <div className="flex items-center justify-end text-lg ">
+                  <div className="flex items-end justify-end text-lg ">
                     <span className="font-light me-2">Commits</span>
-                    <span className="font-semibold">
+                    <span className="font-light text-6xl">
                       {user.contributionsCollection?.totalCommitContributions ??
                         0}
                     </span>
                   </div>
                 </CardContent>
               </Card>
-              <Card className="min-w-64 h-32">
+              <Card className="flex-1 h-32 bg-blue-50">
                 <CardContent className="h-full flex flex-col justify-between">
                   <div className="flex items-center">
-                    <GitPullRequestArrow className="inline mr-1 font-bold text-xl" />
+                    <GitPullRequestArrow className="inline mr-1 font-bold text-blue-400" />
                   </div>
-                  <div className="flex items-center justify-end text-lg ">
+                  <div className="flex items-end justify-end text-lg ">
                     <span className="font-light me-2">PRs</span>
-                    <span className="font-semibold">
+                    <span className="font-light text-6xl">
                       {user.contributionsCollection?.pullRequestContributions
                         ?.totalCount ?? 0}
                     </span>
                   </div>
                 </CardContent>
               </Card>
-              <Card className="min-w-64 h-32">
+              <Card className="flex-1 h-32 bg-red-50">
                 <CardContent className="h-full flex flex-col justify-between">
                   <div className="flex items-center">
-                    <Rocket className="inline mr-1 font-bold text-xl" />
+                    <Rocket className="inline mr-1 font-bold text-red-400" />
                   </div>
-                  <div className="flex items-center justify-end text-lg ">
+                  <div className="flex items-end justify-end text-lg ">
                     <span className="font-light me-2">Releases</span>
-                    <span className="font-semibold">{totalReleases}</span>
+                    <span className="font-light text-6xl">{totalReleases}</span>
                   </div>
                 </CardContent>
               </Card>
