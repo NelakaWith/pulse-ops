@@ -15,25 +15,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-
-type ContributionDay = {
-  date: string;
-  contributionCount: number;
-  color: string;
-};
-
-type ContributionWeek = {
-  contributionDays: ContributionDay[];
-};
-
-type ContributionCalendar = {
-  totalContributions?: number | null;
-  weeks?: ContributionWeek[] | null;
-} | null;
-
-interface ContributionChartProps {
-  contributionCalendar: ContributionCalendar;
-}
+import type { ContributionChartProps } from "../types";
 
 const chartConfig = {
   contributions: {

@@ -1,28 +1,5 @@
 import Image from "next/image";
-
-type Count = { totalCount: number } | null | undefined;
-type ContributionCalendar = { totalContributions?: number | null } | null;
-type ContributionsCollection = {
-  totalCommitContributions?: number | null;
-  restrictedContributionsCount?: number | null;
-  contributionCalendar?: ContributionCalendar;
-} | null;
-type User = {
-  name?: string | null;
-  avatarUrl?: string | null;
-  bio?: string | null;
-  followers?: Count;
-  following?: Count;
-  repositories?: Count;
-  contributionsCollection?: ContributionsCollection;
-} | null;
-
-interface UserMetricsProps {
-  user: User;
-  loading: boolean;
-  error: Error | null;
-  data: unknown;
-}
+import type { UserMetricsProps } from "../types";
 
 function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
   return (

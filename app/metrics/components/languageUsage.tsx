@@ -14,29 +14,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-
-type LanguageEdge = {
-  size: number;
-  node: {
-    name: string;
-    color: string;
-  };
-};
-
-type Repository = {
-  name: string;
-  languages: {
-    edges: LanguageEdge[];
-  };
-};
-
-type RepositoriesData = {
-  nodes: Repository[];
-} | null;
-
-interface LanguageUsageProps {
-  repositories: RepositoriesData;
-}
+import type { LanguageUsageProps } from "../types";
 
 const chartConfig = {
   usage: {

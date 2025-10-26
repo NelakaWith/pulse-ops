@@ -4,40 +4,7 @@ import { useGraphQL } from "@/hooks/use-graphql";
 import UserMetrics from "./components/userMetrics";
 import ContributionChart from "./components/contributionChart";
 import LanguageUsage from "./components/languageUsage";
-
-type Count = { totalCount: number } | null | undefined;
-
-type ContributionCalendar = { totalContributions?: number | null } | null;
-
-type ContributionsCollection = {
-  totalCommitContributions?: number | null;
-  restrictedContributionsCount?: number | null;
-  contributionCalendar?: ContributionCalendar;
-} | null;
-
-type User = {
-  name?: string | null;
-  avatarUrl?: string | null;
-  bio?: string | null;
-  followers?: Count;
-  following?: Count;
-  repositories?: {
-    totalCount: number;
-    nodes: Array<{
-      name: string;
-      languages: {
-        edges: Array<{
-          size: number;
-          node: {
-            name: string;
-            color: string;
-          };
-        }>;
-      };
-    }>;
-  } | null;
-  contributionsCollection?: ContributionsCollection;
-} | null;
+import type { User } from "./types";
 
 const USER_QUERY = `
   query User($login: String!) {
