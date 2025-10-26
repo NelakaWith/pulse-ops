@@ -1,36 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 DevOps Monitor Dashboard
 
-## Getting Started
+A modern **Next.js (App Router)** dashboard visualizing **GitHub repository metrics** such as deployments, commits, and workflow runs.
+Built with **TypeScript, Tailwind CSS, shadcn/ui, lucide-react, and Recharts** to demonstrate real-world frontend architecture.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🧩 Tech Stack
+
+| Layer     | Technology                   | Purpose                                      |
+| --------- | ---------------------------- | -------------------------------------------- |
+| Framework | **Next.js 15 (App Router)**  | Routing, SSR/ISR, API routes                 |
+| Language  | **TypeScript**               | Type safety and scalability                  |
+| Styling   | **Tailwind CSS + shadcn/ui** | Modern responsive UI                         |
+| Icons     | **lucide-react**             | Lightweight, clean icon set                  |
+| Charts    | **Recharts**                 | Data visualization                           |
+| API       | **GitHub REST API**          | Fetch workflow runs, commits, and repo stats |
+
+---
+
+## 🎯 Features
+
+- 📊 **Metrics Overview** – Cards showing stars, forks, latest deployment status, and CI results.
+- 🧠 **Repository Insights** – Charts for commit activity and workflow success rate.
+- 🔄 **Recent Deployments** – Table of latest workflow runs fetched from the GitHub Actions API.
+- 🌗 **Dark/Light Mode** – Seamless theming powered by shadcn/ui and Tailwind.
+- ⚡ **Server-Side Data Fetching** – Uses Next.js server components and caching for fast loads.
+- 🧱 **Modular Architecture** – Reusable UI components for cards, charts, and tables.
+
+---
+
+## 📁 Folder Structure
+
+```
+src/
+├── app/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── api/
+│   │   └── github/
+│   │       └── route.ts          # Proxy to GitHub REST API
+│   └── dashboard/
+│       ├── page.tsx              # Main dashboard page
+│       ├── components/
+│       │   ├── MetricsCards.tsx
+│       │   ├── DeploymentsTable.tsx
+│       │   ├── CommitChart.tsx
+│       │   └── RepoSelector.tsx
+│       └── hooks/
+│           └── useGithubData.ts
+├── components/
+│   ├── ui/                        # shadcn/ui components
+│   ├── layout/
+│   │   ├── Sidebar.tsx
+│   │   ├── Navbar.tsx
+│   │   └── ThemeToggle.tsx
+├── lib/
+│   ├── github.ts                  # API logic
+│   └── utils.ts
+├── styles/
+│   └── globals.css
+├── types/
+│   └── github.ts                  # TypeScript interfaces
+└── env.d.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⚙️ API Integration
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🔗 GitHub REST Endpoints
 
-## Learn More
+Fetch data using a **personal access token** (PAT) stored in `.env.local`:
 
-To learn more about Next.js, take a look at the following resources:
+```
+GITHUB_TOKEN=ghp_your_token_here
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Example Endpoints:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Repo Details:** `GET /repos/{owner}/{repo}`
+- **Commits:** `GET /repos/{owner}/{repo}/commits`
+- **Workflow Runs:** `GET /repos/{owner}/{repo}/actions/runs`
 
-## Deploy on Vercel
+These will be proxied via `/api/github/*` to keep tokens safe.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 💅 UI Design
+
+- **Sidebar Layout**: Navigation for Dashboard, Repositories, and Settings.
+- **Dashboard Grid**: 2x2 layout for metric cards and charts.
+- **Color Palette**: Tailwind’s neutral + emerald tones for tech feel.
+- **Icons**: lucide-react for consistent line icons.
+- **Charts**: Recharts LineChart + BarChart components with smooth transitions.
+
+---
+
+## 🔄 Data Flow
+
+```
+Client (React Components)
+↓
+useGithubData Hook
+↓
+Next.js API Route (/api/github)
+↓
+GitHub REST API
+↓
+Cache & render in Server Components
+```
+
+---
+
+## 🧠 Future Enhancements
+
+- 🧩 Add multiple repo support (dropdown selection)
+- 📈 Add pipeline duration trend graph
+- 🔔 Integrate notifications for failed workflows
+- 💾 Add local caching with Zustand or React Query
+- 🧭 Expand to include Railway or Vercel deployment metrics
+
+---
+
+## 🧰 Setup
+
+```bash
+# 1. Create the project
+npx create-next-app@latest devops-monitor --typescript --tailwind
+
+# 2. Install dependencies
+cd devops-monitor
+npm install recharts lucide-react @radix-ui/react-icons class-variance-authority tailwind-variants
+npx shadcn-ui@latest init
+
+# 3. Add shadcn components
+npx shadcn-ui add card table button chart tabs theme-toggle
+
+# 4. Add environment variable
+echo "GITHUB_TOKEN=ghp_xxx" > .env.local
+
+# 5. Run the dev server
+npm run dev
+```
+
+---
+
+## 📸 Demo Goals
+
+The final project should:
+
+- Load real GitHub data (commits, runs, etc.)
+- Render server-side charts and cards
+- Include dark mode + responsive layout
+- Showcase clean, scalable code and API integration
+
+---
+
+## 🧾 Licensing & Credit
+
+- Icons: [lucide.dev](https://lucide.dev)
+- Charts: [Recharts](https://recharts.org/)
+- UI: [shadcn/ui](https://ui.shadcn.com/)
