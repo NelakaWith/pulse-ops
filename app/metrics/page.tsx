@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useGraphQL } from "@/hooks/use-graphql";
 import UserMetrics from "./components/userMetrics";
 import ContributionChart from "./components/contributionChart";
+import LanguageUsage from "./components/languageUsage";
 
 type Count = { totalCount: number } | null | undefined;
 
@@ -20,7 +21,21 @@ type User = {
   bio?: string | null;
   followers?: Count;
   following?: Count;
-  repositories?: Count;
+  repositories?: {
+    totalCount: number;
+    nodes: Array<{
+      name: string;
+      languages: {
+        edges: Array<{
+          size: number;
+          node: {
+            name: string;
+            color: string;
+          };
+        }>;
+      };
+    }>;
+  } | null;
   contributionsCollection?: ContributionsCollection;
 } | null;
 
@@ -106,13 +121,18 @@ export default function MetricsPage() {
       <h1 className="text-2xl font-bold mb-4">Metrics</h1>
       <div className="space-y-6 w-full">
         <UserMetrics user={user} loading={loading} error={error} data={data} />
-        {user?.contributionsCollection?.contributionCalendar && (
-          <ContributionChart
-            contributionCalendar={
-              user.contributionsCollection.contributionCalendar
-            }
-          />
-        )}
+        <div className="flex gap-8">
+          {user?.contributionsCollection?.contributionCalendar && (
+            <ContributionChart
+              contributionCalendar={
+                user.contributionsCollection.contributionCalendar
+              }
+            />
+          )}
+          {data?.user?.repositories && (
+            <LanguageUsage repositories={data.user.repositories} />
+          )}
+        </div>
       </div>
     </main>
   );
