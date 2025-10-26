@@ -7,6 +7,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 
 type LanguageEdge = {
   size: number;
@@ -86,44 +93,51 @@ function LanguageUsage({ repositories }: LanguageUsageProps) {
   }
 
   return (
-    <div className="p-4 border rounded-lg bg-card text-card-foreground w-full">
-      <h3 className="text-lg font-semibold mb-4">Language Usage</h3>
-      <ChartContainer config={chartConfig} className="h-80 w-full">
-        <PieChart>
-          <Pie
-            data={chartData}
-            cx="50%"
-            cy="50%"
-            outerRadius={120}
-            innerRadius={60}
-            paddingAngle={2}
-            dataKey="value"
-            label={({ name, value }) => {
-              const percentage = (
-                (value / chartData.reduce((sum, item) => sum + item.value, 0)) *
-                100
-              ).toFixed(1);
-              return `${name} (${percentage}%)`;
-            }}
-            labelLine={false}
-          >
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-          <ChartTooltip
-            content={<ChartTooltipContent hideLabel />}
-            formatter={(value: number, name: string) => [
-              `${(
-                (value / chartData.reduce((sum, item) => sum + item.value, 0)) *
-                100
-              ).toFixed(1)}%`,
-              name,
-            ]}
-          />
-        </PieChart>
-      </ChartContainer>
-    </div>
+    <Card className="w-full">
+      <CardHeader className="items-center pb-0">
+        <CardTitle>Language Usage</CardTitle>
+        <CardDescription></CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig} className="h-80 w-full">
+          <PieChart>
+            <Pie
+              data={chartData}
+              cx="50%"
+              cy="50%"
+              outerRadius={120}
+              innerRadius={60}
+              paddingAngle={2}
+              dataKey="value"
+              label={({ name, value }) => {
+                const percentage = (
+                  (value /
+                    chartData.reduce((sum, item) => sum + item.value, 0)) *
+                  100
+                ).toFixed(1);
+                return `${name} (${percentage}%)`;
+              }}
+              labelLine={false}
+            >
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <ChartTooltip
+              content={<ChartTooltipContent hideLabel />}
+              formatter={(value: number, name: string) => [
+                `${(
+                  (value /
+                    chartData.reduce((sum, item) => sum + item.value, 0)) *
+                  100
+                ).toFixed(1)}%`,
+                name,
+              ]}
+            />
+          </PieChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 }
 

@@ -1,15 +1,12 @@
 import Image from "next/image";
 
 type Count = { totalCount: number } | null | undefined;
-
 type ContributionCalendar = { totalContributions?: number | null } | null;
-
 type ContributionsCollection = {
   totalCommitContributions?: number | null;
   restrictedContributionsCount?: number | null;
   contributionCalendar?: ContributionCalendar;
 } | null;
-
 type User = {
   name?: string | null;
   avatarUrl?: string | null;
@@ -49,14 +46,6 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
             )}
 
             <div className="mt-3 flex gap-4 text-sm">
-              <div>
-                <div className="font-medium">Followers</div>
-                <div>{user.followers?.totalCount ?? 0}</div>
-              </div>
-              <div>
-                <div className="font-medium">Following</div>
-                <div>{user.following?.totalCount ?? 0}</div>
-              </div>
               <div>
                 <div className="font-medium">Public repos</div>
                 <div>{user.repositories?.totalCount ?? 0}</div>

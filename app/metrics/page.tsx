@@ -118,7 +118,6 @@ export default function MetricsPage() {
 
   return (
     <main className="p-8 w-full">
-      <h1 className="text-2xl font-bold mb-4">Metrics</h1>
       <div className="space-y-6 w-full">
         <UserMetrics user={user} loading={loading} error={error} data={data} />
         <div className="flex gap-8">

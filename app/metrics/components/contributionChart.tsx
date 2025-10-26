@@ -7,6 +7,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 
 type ContributionDay = {
   date: string;
@@ -78,64 +86,71 @@ function ContributionChart({ contributionCalendar }: ContributionChartProps) {
   }
 
   return (
-    <div className="p-4 border rounded-lg bg-card text-card-foreground w-full">
-      <h3 className="text-lg font-semibold mb-4">Weekly Contributions</h3>
-      <ChartContainer config={chartConfig} className="h-64 w-full">
-        <LineChart data={chartData}>
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="var(--muted-foreground)"
-            opacity={0.2}
-          />
-          <XAxis
-            dataKey="date"
-            tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
-            interval="preserveStartEnd"
-            stroke="var(--muted-foreground)"
-            strokeOpacity={0.5}
-          />
-          <YAxis
-            tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
-            label={{
-              value: "Contributions",
-              angle: -90,
-              position: "insideLeft",
-              style: {
-                textAnchor: "middle",
-                fill: "var(--muted-foreground)",
-              },
-            }}
-            stroke="var(--muted-foreground)"
-            strokeOpacity={0.5}
-          />
-          <ChartTooltip
-            cursor={false}
-            content={<ChartTooltipContent hideLabel />}
-          />
-          <Line
-            type="monotone"
-            dataKey="contributions"
-            stroke="var(--chart-1)"
-            strokeWidth={3}
-            dot={{
-              fill: "var(--chart-1)",
-              strokeWidth: 2,
-              r: 5,
-              stroke: "var(--background)",
-            }}
-            activeDot={{
-              r: 7,
-              stroke: "var(--chart-1)",
-              strokeWidth: 3,
-              fill: "var(--background)",
-            }}
-          />
-        </LineChart>
-      </ChartContainer>
-      <div className="mt-2 text-sm text-muted-foreground">
-        Total contributions: {contributionCalendar.totalContributions ?? 0}
-      </div>
-    </div>
+    <Card className="w-full">
+      <CardHeader className="items-center pb-0">
+        <CardTitle>Weekly Contributions</CardTitle>
+        <CardDescription></CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig} className="h-64 w-full">
+          <LineChart data={chartData}>
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="var(--muted-foreground)"
+              opacity={0.2}
+            />
+            <XAxis
+              dataKey="date"
+              tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+              interval="preserveStartEnd"
+              stroke="var(--muted-foreground)"
+              strokeOpacity={0.5}
+            />
+            <YAxis
+              tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+              label={{
+                value: "Contributions",
+                angle: -90,
+                position: "insideLeft",
+                style: {
+                  textAnchor: "middle",
+                  fill: "var(--muted-foreground)",
+                },
+              }}
+              stroke="var(--muted-foreground)"
+              strokeOpacity={0.5}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Line
+              type="monotone"
+              dataKey="contributions"
+              stroke="var(--chart-1)"
+              strokeWidth={1}
+              dot={{
+                fill: "var(--chart-1)",
+                strokeWidth: 2,
+                r: 5,
+                stroke: "var(--background)",
+              }}
+              activeDot={{
+                r: 7,
+                stroke: "var(--chart-1)",
+                strokeWidth: 3,
+                fill: "var(--background)",
+              }}
+            />
+          </LineChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter>
+        <div className="mt-2 text-sm text-muted-foreground">
+          Total contributions: {contributionCalendar.totalContributions ?? 0}
+        </div>
+      </CardFooter>
+    </Card>
   );
 }
 
