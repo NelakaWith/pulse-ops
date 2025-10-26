@@ -1,9 +1,11 @@
 import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { FolderGit2, GitGraph } from "lucide-react";
 import type { UserMetricsProps } from "../types";
 
 function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
   return (
-    <div>
+    <>
       {loading && <p>Loading metrics...</p>}
       {error && <p className="text-red-500">Error: {error.message}</p>}
 
@@ -16,34 +18,40 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
             width={96}
             height={96}
           />
-          <div>
+          <div className="flex-1">
             <h2 className="text-xl font-semibold">{user.name ?? "—"}</h2>
             {user.bio && (
               <p className="text-sm text-muted-foreground">{user.bio}</p>
             )}
 
             <div className="mt-3 flex gap-4 text-sm">
-              <div>
-                <div className="font-medium">Public repos</div>
-                <div>{user.repositories?.totalCount ?? 0}</div>
-              </div>
-            </div>
-
-            <div className="mt-4 text-sm">
-              <div>
-                Total commit contributions:{" "}
-                {user.contributionsCollection?.totalCommitContributions ?? 0}
-              </div>
-              <div>
-                Restricted contributions:{" "}
-                {user.contributionsCollection?.restrictedContributionsCount ??
-                  0}
-              </div>
-              <div>
-                Contribution calendar total:{" "}
-                {user.contributionsCollection?.contributionCalendar
-                  ?.totalContributions ?? 0}
-              </div>
+              <Card className="min-w-64 h-32">
+                <CardContent className="h-full flex flex-col justify-between">
+                  <div className="flex items-center">
+                    <FolderGit2 className="inline mr-1 font-bold text-xl" />
+                  </div>
+                  <div className="flex items-center justify-end text-lg ">
+                    <span className="font-light me-2">Repos</span>
+                    <span className="font-semibold">
+                      {user.repositories?.totalCount ?? 0}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="min-w-64 h-32">
+                <CardContent className="h-full flex flex-col justify-between">
+                  <div className="flex items-center">
+                    <GitGraph className="inline mr-1 font-bold text-xl" />
+                  </div>
+                  <div className="flex items-center justify-end text-lg ">
+                    <span className="font-light me-2">Commits</span>
+                    <span className="font-semibold">
+                      {user.contributionsCollection?.totalCommitContributions ??
+                        0}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
@@ -52,7 +60,7 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
           {data ? JSON.stringify(data, null, 2) : "No data"}
         </pre>
       )}
-    </div>
+    </>
   );
 }
 

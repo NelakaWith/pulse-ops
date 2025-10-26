@@ -12,22 +12,50 @@ const USER_QUERY = `
       name
       avatarUrl
       bio
+      company
+      location
+      url
       followers {
         totalCount
       }
       following {
         totalCount
       }
-      repositories(privacy: PUBLIC, first: 10, orderBy: {field: STARGAZERS, direction: DESC}) {
+
+      # --- Repositories (Top 10 by stars) ---
+      repositories(
+        privacy: PUBLIC
+        first: 10
+        orderBy: { field: STARGAZERS, direction: DESC }
+      ) {
         totalCount
         nodes {
           name
+          url
           stargazerCount
           forkCount
           watchers {
             totalCount
           }
-          languages(first: 5, orderBy: {field: SIZE, direction: DESC}) {
+          openIssues: issues(states: OPEN) {
+            totalCount
+          }
+          closedIssues: issues(states: CLOSED) {
+            totalCount
+          }
+          openPullRequests: pullRequests(states: OPEN) {
+            totalCount
+          }
+          mergedPullRequests: pullRequests(states: MERGED) {
+            totalCount
+          }
+          closedPullRequests: pullRequests(states: CLOSED) {
+            totalCount
+          }
+          releases {
+            totalCount
+          }
+          languages(first: 5, orderBy: { field: SIZE, direction: DESC }) {
             edges {
               size
               node {
@@ -38,18 +66,40 @@ const USER_QUERY = `
           }
         }
       }
+
+      # --- Contribution Breakdown ---
       contributionsCollection {
         totalCommitContributions
         restrictedContributionsCount
-        pullRequestContributions(first: 1) {
+
+        pullRequestContributions(first: 100) {
+          totalCount
+          nodes {
+            pullRequest {
+              state
+              merged
+              createdAt
+              mergedAt
+              closedAt
+            }
+          }
+        }
+
+        issueContributions(first: 100) {
+          totalCount
+          nodes {
+            issue {
+              state
+              createdAt
+              closedAt
+            }
+          }
+        }
+
+        pullRequestReviewContributions(first: 100) {
           totalCount
         }
-        issueContributions(first: 1) {
-          totalCount
-        }
-        pullRequestReviewContributions(first: 1) {
-          totalCount
-        }
+
         contributionCalendar {
           totalContributions
           weeks {
@@ -60,6 +110,7 @@ const USER_QUERY = `
             }
           }
         }
+
         commitContributionsByRepository(maxRepositories: 5) {
           repository {
             name
@@ -87,7 +138,7 @@ export default function MetricsPage() {
     <main className="p-8 w-full">
       <div className="space-y-6 w-full">
         <UserMetrics user={user} loading={loading} error={error} data={data} />
-        <div className="flex gap-8">
+        <div className="flex gap-4">
           {user?.contributionsCollection?.contributionCalendar && (
             <ContributionChart
               contributionCalendar={
