@@ -68,14 +68,14 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
               height={40}
             />
             <div>
-              <h2 className="text-2xl font-semibold">
+              <h2 className="text-2xl font-bold">
                 {user.name ?? "—"}{" "}
-                <span className="text-neutral-400 font-light">
+                <span className="text-neutral-400 font-light text-xl">
                   @{user.login ?? "—"}
                 </span>
               </h2>
               {user.bio && (
-                <p className="text-sm text-neutral-600">{user.bio}</p>
+                <p className="text-lg text-neutral-400">{user.bio}</p>
               )}
             </div>
           </div>
