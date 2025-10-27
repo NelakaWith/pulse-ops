@@ -65,7 +65,7 @@ function LanguageUsage({ repositories }: LanguageUsageProps) {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-full h-full">
       <CardHeader className="items-center pb-0">
         <CardTitle>
           <span className="text-xl">Language Usage</span>

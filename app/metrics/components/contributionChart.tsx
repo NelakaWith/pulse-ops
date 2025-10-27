@@ -68,7 +68,7 @@ function ContributionChart({ contributionCalendar }: ContributionChartProps) {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-full h-full">
       <CardHeader className="items-center pb-0">
         <CardTitle>
           <span className="text-xl">Weekly Contributions</span>

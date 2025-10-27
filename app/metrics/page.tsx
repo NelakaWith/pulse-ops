@@ -81,16 +81,22 @@ export default function MetricsPage() {
     <main className="p-8 w-full">
       <div className="space-y-6 w-full">
         <UserMetrics user={user} loading={loading} error={error} data={data} />
-        {user?.contributionsCollection?.contributionCalendar && (
-          <ContributionChart
-            contributionCalendar={
-              user.contributionsCollection.contributionCalendar
-            }
-          />
-        )}
-        {data?.user?.repositories && (
-          <LanguageUsage repositories={data.user.repositories} />
-        )}
+        <div className="flex gap-4">
+          {user?.contributionsCollection?.contributionCalendar && (
+            <div className="flex-2">
+              <ContributionChart
+                contributionCalendar={
+                  user.contributionsCollection.contributionCalendar
+                }
+              />
+            </div>
+          )}
+          {data?.user?.repositories && (
+            <div className="flex-1">
+              <LanguageUsage repositories={data.user.repositories} />
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );
