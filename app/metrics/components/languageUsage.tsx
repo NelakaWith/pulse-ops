@@ -73,8 +73,9 @@ function LanguageUsage({ repositories }: LanguageUsageProps) {
   return (
     <Card className="w-full">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Language Usage</CardTitle>
-        <CardDescription></CardDescription>
+        <CardTitle>
+          <span className="text-xl">Language Usage</span>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-72 w-full">
@@ -83,7 +84,7 @@ function LanguageUsage({ repositories }: LanguageUsageProps) {
               data={chartData}
               cx="50%"
               cy="50%"
-              outerRadius={120}
+              outerRadius={100}
               innerRadius={60}
               paddingAngle={2}
               dataKey="value"

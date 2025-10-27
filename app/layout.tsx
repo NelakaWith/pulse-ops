@@ -44,7 +44,7 @@ export default function RootLayout({
         {process.env.NODE_ENV === "development" && <DevHydrationDebug />}
         <SidebarProvider>
           <AppSidebar />
-          <main className="flex-1 w-full">
+          <main className="flex-1 w-full bg-neutral-50">
             <SidebarTrigger />
             {children}
           </main>

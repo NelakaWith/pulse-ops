@@ -13,6 +13,45 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
     );
   }, [user?.repositories?.nodes]);
 
+  const metricCards = useMemo(() => {
+    return [
+      {
+        key: "repos",
+        label: "Repos",
+        value: user?.repositories?.totalCount ?? 0,
+        bg: "bg-purple-50",
+        iconClass: "text-purple-400",
+        Icon: FolderGit,
+      },
+      {
+        key: "commits",
+        label: "Commits",
+        value: user?.contributionsCollection?.totalCommitContributions ?? 0,
+        bg: "bg-green-50",
+        iconClass: "text-green-400",
+        Icon: GitGraph,
+      },
+      {
+        key: "prs",
+        label: "PRs",
+        value:
+          user?.contributionsCollection?.pullRequestContributions?.totalCount ??
+          0,
+        bg: "bg-blue-50",
+        iconClass: "text-blue-400",
+        Icon: GitPullRequestArrow,
+      },
+      {
+        key: "releases",
+        label: "Releases",
+        value: totalReleases,
+        bg: "bg-red-50",
+        iconClass: "text-red-400",
+        Icon: Rocket,
+      },
+    ];
+  }, [user, totalReleases]);
+
   return (
     <>
       {loading && <p>Loading metrics...</p>}
@@ -24,76 +63,40 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
             <Image
               src={user.avatarUrl ?? ""}
               alt={user.name ?? "avatar"}
-              className="h-24 w-24 rounded-full"
-              width={64}
-              height={64}
+              className="h-10 w-10 rounded-full"
+              width={40}
+              height={40}
             />
             <div>
-              <h2 className="text-xl font-semibold">
+              <h2 className="text-2xl font-semibold">
                 {user.name ?? "—"}{" "}
                 <span className="text-neutral-400 font-light">
                   @{user.login ?? "—"}
                 </span>
               </h2>
               {user.bio && (
-                <p className="text-sm text-muted-foreground">{user.bio}</p>
+                <p className="text-sm text-neutral-600">{user.bio}</p>
               )}
             </div>
           </div>
           <div className="flex-1">
             <div className="mt-3 flex gap-4 text-sm">
-              <Card className="flex-1 h-32 bg-purple-50">
-                <CardContent className="h-full flex flex-col justify-between">
-                  <div className="flex items-center">
-                    <FolderGit className="inline mr-1 font-bold text-purple-400" />
-                  </div>
-                  <div className="flex items-end justify-end text-lg ">
-                    <span className="font-light me-2">Repos</span>
-                    <span className="font-light text-6xl">
-                      {user.repositories?.totalCount ?? 0}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="flex-1 h-32 bg-green-50">
-                <CardContent className="h-full flex flex-col justify-between">
-                  <div className="flex items-center">
-                    <GitGraph className="inline mr-1 font-bold text-green-400" />
-                  </div>
-                  <div className="flex items-end justify-end text-lg ">
-                    <span className="font-light me-2">Commits</span>
-                    <span className="font-light text-6xl">
-                      {user.contributionsCollection?.totalCommitContributions ??
-                        0}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="flex-1 h-32 bg-blue-50">
-                <CardContent className="h-full flex flex-col justify-between">
-                  <div className="flex items-center">
-                    <GitPullRequestArrow className="inline mr-1 font-bold text-blue-400" />
-                  </div>
-                  <div className="flex items-end justify-end text-lg ">
-                    <span className="font-light me-2">PRs</span>
-                    <span className="font-light text-6xl">
-                      {user.contributionsCollection?.pullRequestContributions
-                        ?.totalCount ?? 0}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="flex-1 h-32 bg-red-50">
-                <CardContent className="h-full flex flex-col justify-between">
-                  <div className="flex items-center">
-                    <Rocket className="inline mr-1 font-bold text-red-400" />
-                  </div>
-                  <div className="flex items-end justify-end text-lg ">
-                    <span className="font-light me-2">Releases</span>
-                    <span className="font-light text-6xl">{totalReleases}</span>
-                  </div>
-                </CardContent>
-              </Card>
+              {metricCards.map(({ key, label, value, bg, iconClass, Icon }) => (
+                <Card key={key} className={`flex-1 h-32 ${bg}`}>
+                  <CardContent className="h-full flex justify-between">
+                    <div className="flex items-center">
+                      <Icon
+                        className={`inline mr-1 font-bold ${iconClass}`}
+                        size={65}
+                      />
+                    </div>
+                    <div className="flex items-end justify-end text-lg ">
+                      <span className="font-light me-2">{label}</span>
+                      <span className="font-light text-6xl">{value}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </div>

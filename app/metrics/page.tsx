@@ -89,9 +89,9 @@ export default function MetricsPage() {
               }
             />
           )}
-          {data?.user?.repositories && (
+          {/* {data?.user?.repositories && (
             <LanguageUsage repositories={data.user.repositories} />
-          )}
+          )} */}
         </div>
       </div>
     </main>
