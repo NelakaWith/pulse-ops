@@ -26,7 +26,7 @@ const USER_QUERY = `
       repositories(
         privacy: PUBLIC
         first: 20
-        orderBy: { field: STARGAZERS, direction: DESC }
+        orderBy: { field: PUSHED_AT, direction: DESC }
       ) {
         totalCount
         nodes {
@@ -81,18 +81,16 @@ export default function MetricsPage() {
     <main className="p-8 w-full">
       <div className="space-y-6 w-full">
         <UserMetrics user={user} loading={loading} error={error} data={data} />
-        <div className="flex gap-4">
-          {user?.contributionsCollection?.contributionCalendar && (
-            <ContributionChart
-              contributionCalendar={
-                user.contributionsCollection.contributionCalendar
-              }
-            />
-          )}
-          {/* {data?.user?.repositories && (
-            <LanguageUsage repositories={data.user.repositories} />
-          )} */}
-        </div>
+        {user?.contributionsCollection?.contributionCalendar && (
+          <ContributionChart
+            contributionCalendar={
+              user.contributionsCollection.contributionCalendar
+            }
+          />
+        )}
+        {data?.user?.repositories && (
+          <LanguageUsage repositories={data.user.repositories} />
+        )}
       </div>
     </main>
   );
