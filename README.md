@@ -1,12 +1,12 @@
 # 🩺 PulseOps - GitHub Analytics Dashboard
 
-A modern **GitHub analytics dashboard** built with **Next.js 16** and **TypeScript**, featuring real-time user metrics, contribution visualization, and language usage insights. Demonstrates advanced data visualization, GraphQL integration, and modern React patterns.
+A modern **GitHub analytics dashboard** built with **Next.js 16** and **TypeScript**, featuring real-time user metrics, contribution visualization, and language usage insights. Demonstrates advanced data visualization, GraphQL & REST API integration, and modern React patterns.
 
 ---
 
 ## 🎯 Project Overview
 
-PulseOps transforms GitHub user data into actionable insights through interactive charts and metrics cards. The dashboard fetches comprehensive user information via GitHub's GraphQL API and presents it in a clean, responsive interface perfect for developers, recruiters, and team leads.
+PulseOps transforms GitHub user data into actionable insights through interactive charts and metrics cards. The dashboard fetches comprehensive user information via GitHub's GraphQL and REST APIs and presents it in a clean, responsive interface perfect for developers, recruiters, and team leads.
 
 **Key Highlights:**
 
@@ -14,21 +14,21 @@ PulseOps transforms GitHub user data into actionable insights through interactiv
 - 🎨 **Modern UI/UX** - Clean design with shadcn/ui components and Tailwind CSS
 - 📊 **Interactive Charts** - Line charts for contributions, bar charts for language usage
 - 🔧 **TypeScript-First** - Full type safety across components and API integration
-- ⚡ **Performance Optimized** - Efficient data fetching with Apollo GraphQL client
+- ⚡ **Performance Optimized** - Efficient data fetching with Apollo GraphQL client and REST API endpoints
 
 ---
 
 ## 🛠️ Tech Stack
 
-| **Category**         | **Technology**             | **Purpose**                                |
-| -------------------- | -------------------------- | ------------------------------------------ |
-| **Framework**        | Next.js 16 (App Router)    | Server-side rendering, routing, API routes |
-| **Language**         | TypeScript 5               | Type safety and developer experience       |
-| **Styling**          | Tailwind CSS 4 + shadcn/ui | Responsive design and component library    |
-| **Data Fetching**    | Apollo Client + GraphQL    | Efficient GitHub API integration           |
-| **Charts**           | Recharts 2.15              | Interactive data visualizations            |
-| **Icons**            | Lucide React               | Consistent, modern iconography             |
-| **State Management** | React 19 (built-in hooks)  | Component state and data flow              |
+| **Category**         | **Technology**               | **Purpose**                                |
+| -------------------- | ---------------------------- | ------------------------------------------ |
+| **Framework**        | Next.js 16 (App Router)      | Server-side rendering, routing, API routes |
+| **Language**         | TypeScript 5                 | Type safety and developer experience       |
+| **Styling**          | Tailwind CSS 4 + shadcn/ui   | Responsive design and component library    |
+| **Data Fetching**    | Apollo Client + GraphQL/REST | Efficient GitHub API integration           |
+| **Charts**           | Recharts 2.15                | Interactive data visualizations            |
+| **Icons**            | Lucide React                 | Consistent, modern iconography             |
+| **State Management** | React 19 (built-in hooks)    | Component state and data flow              |
 
 ---
 
@@ -65,9 +65,24 @@ PulseOps transforms GitHub user data into actionable insights through interactiv
 
 ```
 pulse-ops/
+├── .env.local                        # Environment variables
+├── .gitignore                        # Git ignore rules
+├── LICENSE                           # GNU AGPL v3 License
+├── README.md                         # Project documentation
+├── package.json                      # Dependencies and scripts
+├── package-lock.json                 # Dependency lock file
+├── next.config.ts                    # Next.js configuration
+├── next-env.d.ts                     # Next.js TypeScript declarations
+├── tsconfig.json                     # TypeScript configuration
+├── tsconfig.tsbuildinfo              # TypeScript build info
+├── eslint.config.mjs                 # ESLint configuration
+├── postcss.config.mjs                # PostCSS configuration
+├── components.json                   # shadcn/ui configuration
 ├── app/
 │   ├── layout.tsx                    # Root layout with sidebar
 │   ├── page.tsx                      # Home page
+│   ├── globals.css                   # Global styles
+│   ├── favicon.ico                   # Site favicon
 │   ├── metrics/
 │   │   ├── page.tsx                  # Main metrics dashboard
 │   │   ├── types.ts                  # Shared TypeScript interfaces
@@ -75,27 +90,40 @@ pulse-ops/
 │   │       ├── userMetrics.tsx       # User profile and metric cards
 │   │       ├── contributionChart.tsx # Weekly contribution line chart
 │   │       └── languageUsage.tsx     # Language distribution chart
+│   ├── repos/                        # Repository pages
 │   └── api/
-│       └── github/
-│           └── route.ts              # GraphQL proxy endpoint
+│       ├── github/
+│       │   └── route.ts              # GitHub REST API proxy endpoint
+│       └── github-graphql/
+│           └── route.ts              # GitHub GraphQL API proxy endpoint
 ├── components/
-│   ├── ui/                           # shadcn/ui components (Card, Button, etc.)
-│   └── app-sidebar.tsx               # Navigation sidebar
+│   ├── ui/                           # shadcn/ui components
+│   ├── app-sidebar.tsx               # Navigation sidebar
+│   └── dev-hydration-debug.tsx       # Development debugging component
 ├── hooks/
 │   └── use-mobile.ts                 # Responsive design hook
 ├── lib/
 │   └── utils.ts                      # Utility functions and helpers
-└── public/                           # Static assets
+├── docs/
+│   └── devops_monitor_plan.md        # Project planning documentation
+├── public/                           # Static assets
+│   ├── file.svg                      # File icon
+│   ├── globe.svg                     # Globe icon
+│   ├── next.svg                      # Next.js logo
+│   ├── vercel.svg                    # Vercel logo
+│   └── window.svg                    # Window icon
+└── styles/                           # Additional stylesheets (if any)
 ```
 
 ---
 
 ## 🔧 Key Technical Concepts
 
-### **GraphQL Integration**
+### **API Integration**
 
-- GitHub GraphQL API v4 for comprehensive user data fetching
-- Efficient query structure retrieving repositories, contributions, and languages
+- **GraphQL API v4** for comprehensive user data fetching (repositories, contributions, languages)
+- **REST API v3** for additional data sources and fallback endpoints
+- Efficient query structure with optimized data fetching patterns
 - Type-safe data fetching with generated TypeScript interfaces
 
 ### **Data Visualization**
