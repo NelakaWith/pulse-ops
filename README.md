@@ -1,163 +1,206 @@
-# 🚀 DevOps Monitor Dashboard
+# 🩺 PulseOps - GitHub Analytics Dashboard
 
-A modern **Next.js (App Router)** dashboard visualizing **GitHub repository metrics** such as deployments, commits, and workflow runs.
-Built with **TypeScript, Tailwind CSS, shadcn/ui, lucide-react, and Recharts** to demonstrate real-world frontend architecture.
-
----
-
-## 🧩 Tech Stack
-
-| Layer     | Technology                   | Purpose                                      |
-| --------- | ---------------------------- | -------------------------------------------- |
-| Framework | **Next.js 15 (App Router)**  | Routing, SSR/ISR, API routes                 |
-| Language  | **TypeScript**               | Type safety and scalability                  |
-| Styling   | **Tailwind CSS + shadcn/ui** | Modern responsive UI                         |
-| Icons     | **lucide-react**             | Lightweight, clean icon set                  |
-| Charts    | **Recharts**                 | Data visualization                           |
-| API       | **GitHub REST API**          | Fetch workflow runs, commits, and repo stats |
+A modern **GitHub analytics dashboard** built with **Next.js 16** and **TypeScript**, featuring real-time user metrics, contribution visualization, and language usage insights. Demonstrates advanced data visualization, GraphQL integration, and modern React patterns.
 
 ---
 
-## 🎯 Features
+## 🎯 Project Overview
 
-- 📊 **Metrics Overview** – Cards showing stars, forks, latest deployment status, and CI results.
-- 🧠 **Repository Insights** – Charts for commit activity and workflow success rate.
-- 🔄 **Recent Deployments** – Table of latest workflow runs fetched from the GitHub Actions API.
-- 🌗 **Dark/Light Mode** – Seamless theming powered by shadcn/ui and Tailwind.
-- ⚡ **Server-Side Data Fetching** – Uses Next.js server components and caching for fast loads.
-- 🧱 **Modular Architecture** – Reusable UI components for cards, charts, and tables.
+PulseOps transforms GitHub user data into actionable insights through interactive charts and metrics cards. The dashboard fetches comprehensive user information via GitHub's GraphQL API and presents it in a clean, responsive interface perfect for developers, recruiters, and team leads.
+
+**Key Highlights:**
+
+- 📈 **Real-time GitHub Analytics** - Live contribution data and repository insights
+- 🎨 **Modern UI/UX** - Clean design with shadcn/ui components and Tailwind CSS
+- 📊 **Interactive Charts** - Line charts for contributions, bar charts for language usage
+- 🔧 **TypeScript-First** - Full type safety across components and API integration
+- ⚡ **Performance Optimized** - Efficient data fetching with Apollo GraphQL client
 
 ---
 
-## 📁 Folder Structure
+## 🛠️ Tech Stack
+
+| **Category**         | **Technology**             | **Purpose**                                |
+| -------------------- | -------------------------- | ------------------------------------------ |
+| **Framework**        | Next.js 16 (App Router)    | Server-side rendering, routing, API routes |
+| **Language**         | TypeScript 5               | Type safety and developer experience       |
+| **Styling**          | Tailwind CSS 4 + shadcn/ui | Responsive design and component library    |
+| **Data Fetching**    | Apollo Client + GraphQL    | Efficient GitHub API integration           |
+| **Charts**           | Recharts 2.15              | Interactive data visualizations            |
+| **Icons**            | Lucide React               | Consistent, modern iconography             |
+| **State Management** | React 19 (built-in hooks)  | Component state and data flow              |
+
+---
+
+## ✨ Features
+
+### 📊 **User Metrics Dashboard**
+
+- Real-time repository count, commit contributions, pull requests, and releases
+- Color-coded metric cards with responsive design
+- GitHub avatar and profile information display
+
+### 📈 **Contribution Analytics**
+
+- Interactive line chart showing weekly contribution patterns
+- Contribution calendar data with color-coded activity levels
+- Total contribution statistics and trends
+
+### 🌍 **Language Usage Insights**
+
+- Horizontal bar chart displaying programming language distribution
+- GitHub's official language colors for accurate representation
+- Percentage-based tooltips and visual breakdown
+
+### 🎨 **Modern Interface**
+
+- Responsive sidebar navigation with collapsible design
+- Dark/light theme support (ready for implementation)
+- Consistent spacing and typography using Tailwind CSS
+- Smooth animations and transitions
+
+---
+
+## 📁 Project Structure
 
 ```
-src/
+pulse-ops/
 ├── app/
-│   ├── layout.tsx
-│   ├── page.tsx
-│   ├── api/
-│   │   └── github/
-│   │       └── route.ts          # Proxy to GitHub REST API
-│   └── dashboard/
-│       ├── page.tsx              # Main dashboard page
-│       ├── components/
-│       │   ├── MetricsCards.tsx
-│       │   ├── DeploymentsTable.tsx
-│       │   ├── CommitChart.tsx
-│       │   └── RepoSelector.tsx
-│       └── hooks/
-│           └── useGithubData.ts
+│   ├── layout.tsx                    # Root layout with sidebar
+│   ├── page.tsx                      # Home page
+│   ├── metrics/
+│   │   ├── page.tsx                  # Main metrics dashboard
+│   │   ├── types.ts                  # Shared TypeScript interfaces
+│   │   └── components/
+│   │       ├── userMetrics.tsx       # User profile and metric cards
+│   │       ├── contributionChart.tsx # Weekly contribution line chart
+│   │       └── languageUsage.tsx     # Language distribution chart
+│   └── api/
+│       └── github/
+│           └── route.ts              # GraphQL proxy endpoint
 ├── components/
-│   ├── ui/                        # shadcn/ui components
-│   ├── layout/
-│   │   ├── Sidebar.tsx
-│   │   ├── Navbar.tsx
-│   │   └── ThemeToggle.tsx
+│   ├── ui/                           # shadcn/ui components (Card, Button, etc.)
+│   └── app-sidebar.tsx               # Navigation sidebar
+├── hooks/
+│   └── use-mobile.ts                 # Responsive design hook
 ├── lib/
-│   ├── github.ts                  # API logic
-│   └── utils.ts
-├── styles/
-│   └── globals.css
-├── types/
-│   └── github.ts                  # TypeScript interfaces
-└── env.d.ts
+│   └── utils.ts                      # Utility functions and helpers
+└── public/                           # Static assets
 ```
 
 ---
 
-## ⚙️ API Integration
+## 🔧 Key Technical Concepts
 
-### 🔗 GitHub REST Endpoints
+### **GraphQL Integration**
 
-Fetch data using a **personal access token** (PAT) stored in `.env.local`:
+- GitHub GraphQL API v4 for comprehensive user data fetching
+- Efficient query structure retrieving repositories, contributions, and languages
+- Type-safe data fetching with generated TypeScript interfaces
 
-```
-GITHUB_TOKEN=ghp_your_token_here
-```
+### **Data Visualization**
 
-#### Example Endpoints:
+- Recharts integration with custom chart configurations
+- Responsive chart containers that adapt to different screen sizes
+- Color consistency using GitHub's official language color palette
 
-- **Repo Details:** `GET /repos/{owner}/{repo}`
-- **Commits:** `GET /repos/{owner}/{repo}/commits`
-- **Workflow Runs:** `GET /repos/{owner}/{repo}/actions/runs`
+### **Component Architecture**
 
-These will be proxied via `/api/github/*` to keep tokens safe.
+- Separation of concerns: data fetching in page components, presentation in UI components
+- Reusable metric card system with data-driven rendering
+- Type-safe props and interfaces throughout the component tree
 
----
+### **Modern React Patterns**
 
-## 💅 UI Design
-
-- **Sidebar Layout**: Navigation for Dashboard, Repositories, and Settings.
-- **Dashboard Grid**: 2x2 layout for metric cards and charts.
-- **Color Palette**: Tailwind’s neutral + emerald tones for tech feel.
-- **Icons**: lucide-react for consistent line icons.
-- **Charts**: Recharts LineChart + BarChart components with smooth transitions.
+- React 19 with latest hooks and patterns
+- Memoized computations for expensive data transformations
+- Efficient re-rendering with proper dependency arrays
 
 ---
 
-## 🔄 Data Flow
+## 🚀 Setup Instructions
 
-```
-Client (React Components)
-↓
-useGithubData Hook
-↓
-Next.js API Route (/api/github)
-↓
-GitHub REST API
-↓
-Cache & render in Server Components
-```
+### Prerequisites
 
----
+- Node.js 18+
+- npm or yarn
+- GitHub Personal Access Token
 
-## 🧠 Future Enhancements
-
-- 🧩 Add multiple repo support (dropdown selection)
-- 📈 Add pipeline duration trend graph
-- 🔔 Integrate notifications for failed workflows
-- 💾 Add local caching with Zustand or React Query
-- 🧭 Expand to include Railway or Vercel deployment metrics
-
----
-
-## 🧰 Setup
+### Installation
 
 ```bash
-# 1. Create the project
-npx create-next-app@latest devops-monitor --typescript --tailwind
+# Clone the repository
+git clone https://github.com/your-username/pulse-ops.git
+cd pulse-ops
 
-# 2. Install dependencies
-cd devops-monitor
-npm install recharts lucide-react @radix-ui/react-icons class-variance-authority tailwind-variants
-npx shadcn-ui@latest init
+# Install dependencies
+npm install
 
-# 3. Add shadcn components
-npx shadcn-ui add card table button chart tabs theme-toggle
+# Set up environment variables
+cp .env.local.example .env.local
+# Add your GitHub token to .env.local:
+# GITHUB_TOKEN=ghp_your_token_here
 
-# 4. Add environment variable
-echo "GITHUB_TOKEN=ghp_xxx" > .env.local
-
-# 5. Run the dev server
+# Run development server
 npm run dev
 ```
 
+### Environment Variables
+
+```bash
+# .env.local
+GITHUB_TOKEN=ghp_your_github_personal_access_token
+```
+
+**Getting a GitHub Token:**
+
+1. Go to GitHub Settings → Developer settings → Personal access tokens
+2. Generate new token with `repo` and `user` scopes
+3. Copy token to your `.env.local` file
+
 ---
 
-## 📸 Demo Goals
+## 🎨 Demo Screenshots
 
-The final project should:
-
-- Load real GitHub data (commits, runs, etc.)
-- Render server-side charts and cards
-- Include dark mode + responsive layout
-- Showcase clean, scalable code and API integration
+_work in progress_
 
 ---
 
-## 🧾 Licensing & Credit
+## 🔮 Future Enhancements
 
-- Icons: [lucide.dev](https://lucide.dev)
-- Charts: [Recharts](https://recharts.org/)
-- UI: [shadcn/ui](https://ui.shadcn.com/)
+- [ ] **Multi-user Support** - Compare multiple GitHub profiles
+- [ ] **Advanced Analytics** - Commit frequency patterns, repository health scores
+- [ ] **Export Features** - PDF reports and data export functionality
+- [ ] **Real-time Updates** - WebSocket integration for live data updates
+- [ ] **Team Analytics** - Organization-level insights and team comparisons
+- [ ] **Mobile App** - React Native version for mobile analytics
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+**NelakaWith**
+
+- **GitHub**: [@NelakaWith](https://github.com/NelakaWith)
+- **LinkedIn**: [in/nelaka-withanage](https://www.linkedin.com/in/nelaka-withanage/)
+- **Portfolio**: [nelakawith.netlify.app](https://nelakawith.netlify.app/)
+
+---
+
+## 📝 License
+
+This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3 - see the [LICENSE](LICENSE) file for details.
+
+_Built with ❤️ using Next.js, TypeScript, and the GitHub GraphQL/REST APIs_
