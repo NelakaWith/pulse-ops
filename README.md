@@ -191,7 +191,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Author
 
-**NelakaWith**
+**🫡 Nelaka Withanage**
 
 - **GitHub**: [@NelakaWith](https://github.com/NelakaWith)
 - **LinkedIn**: [in/nelaka-withanage](https://www.linkedin.com/in/nelaka-withanage/)
