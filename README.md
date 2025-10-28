@@ -27,7 +27,7 @@ PulseOps transforms GitHub user data into actionable insights through interactiv
 | **Styling**          | Tailwind CSS 4 + shadcn/ui   | Responsive design and component library    |
 | **Data Fetching**    | Apollo Client + GraphQL/REST | Efficient GitHub API integration           |
 | **Charts**           | Recharts 2.15                | Interactive data visualizations            |
-| **Icons**            | Lucide React                 | Consistent, modern iconography             |
+| **Icons**            | Lucide React 0.546           | Consistent, modern iconography             |
 | **State Management** | React 19 (built-in hooks)    | Component state and data flow              |
 
 ---
@@ -158,7 +158,7 @@ pulse-ops/
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/pulse-ops.git
+git clone https://github.com/NelakaWith/pulse-ops.git
 cd pulse-ops
 
 # Install dependencies
