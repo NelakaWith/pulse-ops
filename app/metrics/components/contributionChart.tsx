@@ -128,11 +128,6 @@ function ContributionChart({ contributionCalendar }: ContributionChartProps) {
           </LineChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
-        <div className="mt-2 text-sm text-muted-foreground">
-          Total contributions: {contributionCalendar.totalContributions ?? 0}
-        </div>
-      </CardFooter>
     </Card>
   );
 }
