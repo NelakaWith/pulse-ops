@@ -19,7 +19,7 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
         key: "repos",
         label: "Repos",
         value: user?.repositories?.totalCount ?? 0,
-        bg: "bg-white",
+        bg: "",
         iconClass: "text-purple-400",
         Icon: FolderGit,
       },
@@ -27,7 +27,7 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
         key: "commits",
         label: "Commits",
         value: user?.contributionsCollection?.totalCommitContributions ?? 0,
-        bg: "bg-white",
+        bg: "",
         iconClass: "text-green-400",
         Icon: GitGraph,
       },
@@ -37,7 +37,7 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
         value:
           user?.contributionsCollection?.pullRequestContributions?.totalCount ??
           0,
-        bg: "bg-white",
+        bg: "",
         iconClass: "text-blue-400",
         Icon: GitPullRequestArrow,
       },
@@ -45,7 +45,7 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
         key: "releases",
         label: "Releases",
         value: totalReleases,
-        bg: "bg-white",
+        bg: "",
         iconClass: "text-red-400",
         Icon: Rocket,
       },
@@ -101,7 +101,7 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
           </div>
         </div>
       ) : (
-        <pre className="bg-gray-100 p-4 rounded mt-2 overflow-x-auto">
+        <pre className="bg-card p-4 rounded mt-2 overflow-x-auto">
           {data ? JSON.stringify(data, null, 2) : "No data"}
         </pre>
       )}
