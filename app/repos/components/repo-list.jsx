@@ -7,6 +7,7 @@ import { useGraphQL } from "@/hooks/use-graphql";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 function RepoList() {
   const REPO_QUERY = React.useMemo(
@@ -97,15 +98,18 @@ function RepoList() {
                       </div>
                     )}
                   </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      <a
+                  <CardFooter className="gap-2">
+                    <Button className="flex-1 cursor-pointer">
+                      More Details
+                    </Button>
+                    <Button variant="outline" asChild>
+                      <Link
                         href={repo.url}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         View on GitHub
-                      </a>
+                      </Link>
                     </Button>
                   </CardFooter>
                 </Card>
