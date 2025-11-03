@@ -9,6 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 
 // Menu items.
@@ -30,9 +31,16 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel></SidebarGroupLabel>
+          <SidebarGroupLabel className="py-10">
+            <h2 className="text-4xl font-semibold">
+              Pulse<span className="font-extralight">Ops</span>
+            </h2>
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarTrigger className="float-end cursor-pointer" />
+              </SidebarMenuItem>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>

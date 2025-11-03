@@ -1,3 +1,5 @@
+"use client";
+
 import RepoList from "./components/repo-list";
 
 function RepoListPage() {

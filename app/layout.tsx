@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import DevHydrationDebug from "@/components/dev-hydration-debug";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -51,10 +51,7 @@ export default function RootLayout({
           {process.env.NODE_ENV === "development" && <DevHydrationDebug />}
           <SidebarProvider>
             <AppSidebar />
-            <main className="flex-1 w-full bg-background">
-              <SidebarTrigger />
-              {children}
-            </main>
+            <main className="flex-1 w-full bg-background">{children}</main>
           </SidebarProvider>
         </ThemeProvider>
       </body>
