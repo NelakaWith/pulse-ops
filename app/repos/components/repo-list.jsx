@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGraphQL } from "@/hooks/use-graphql";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 function RepoList() {
   const REPO_QUERY = React.useMemo(
@@ -16,6 +18,13 @@ function RepoList() {
             id
             name
             description
+            repositoryTopics(first: 10) {
+              nodes {
+                topic {
+                  name
+                }
+              }
+            }
             openGraphImageUrl
             url
             stargazerCount
@@ -34,48 +43,74 @@ function RepoList() {
   return (
     <section className="w-full">
       {loading && (
-        <div className="grid grid-cols-3 gap-4 mt-4 w-full">
+        <div className="grid grid-cols-4 gap-4 mt-4 w-full">
           {Array.from({ length: 12 }).map((_, index) => (
             <div className="flex flex-col space-y-3" key={index}>
-              <Skeleton className="h-[200px] w-[500px] rounded-xl" />
+              <Skeleton className="h-[400px] flx rounded-xl" />
             </div>
           ))}
         </div>
       )}
       {error && <p>Error: {error.message}</p>}
       {repos && (
-        <div className="grid grid-cols-3 gap-4 mt-4">
+        <div className="grid grid-cols-4 gap-4 mt-4">
           {Array.isArray(repos) &&
-            repos.map((repo) => (
-              <Card key={repo.id} className="p-4">
-                {repo.openGraphImageUrl && (
-                  <Image
-                    src={repo.openGraphImageUrl}
-                    alt={`${repo.name} preview`}
-                    className="w-full h-40 object-cover rounded-md mb-2"
-                    width={500}
-                    height={500}
-                  />
-                )}
-                <h3 className="font-bold text-lg">{repo.name}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {repo.description}
-                </p>
-                <div className="mt-3 flex items-center justify-between">
-                  <a
-                    href={repo.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline"
-                  >
-                    View on GitHub
-                  </a>
-                  <div className="text-sm text-muted-foreground">
-                    ⭐ {repo.stargazerCount ?? 0}
-                  </div>
-                </div>
-              </Card>
-            ))}
+            repos.map((repo) => {
+              const topics =
+                repo.repositoryTopics?.nodes
+                  ?.map((n) => n?.topic?.name)
+                  .filter(Boolean) || [];
+              return (
+                <Card key={repo.id} className="min-h-[400px]">
+                  <CardContent className="flex-1">
+                    {repo.openGraphImageUrl && (
+                      <Image
+                        src={repo.openGraphImageUrl}
+                        alt={`${repo.name} preview`}
+                        className="w-full object-cover rounded-md mb-2"
+                        loading="eager"
+                        width={500}
+                        height={500}
+                      />
+                    )}
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-bold text-lg">{repo.name}</h3>
+                      {repo.stargazerCount !== 0 && (
+                        <div className="flex items-center justify-between">
+                          <div className="text-sm text-muted-foreground">
+                            ⭐ {repo.stargazerCount ?? 0}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {repo.description}
+                    </p>
+
+                    {topics.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {topics.map((t) => (
+                          <Badge key={t} variant="outline">
+                            {t}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                  <CardFooter>
+                    <Button variant="outline" className="w-full">
+                      <a
+                        href={repo.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View on GitHub
+                      </a>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              );
+            })}
         </div>
       )}
     </section>
