@@ -1,4 +1,4 @@
-import { Activity, FolderGit } from "lucide-react";
+import { Activity, FolderGit, TrendingUpDown } from "lucide-react";
 
 import {
   Sidebar,
@@ -23,6 +23,11 @@ const items = [
     title: "Repos",
     url: "/repos",
     icon: FolderGit,
+  },
+  {
+    title: "Trends",
+    url: "/trends",
+    icon: TrendingUpDown,
   },
 ];
 
