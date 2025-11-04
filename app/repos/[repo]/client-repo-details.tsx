@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGraphQL } from "@/hooks/use-graphql";
 import { useRepoParams } from "@/hooks/use-repo-params";
 import CommitList from "./commit-list";
@@ -49,7 +50,7 @@ export default function ClientRepoDetails({
           name
           target {
             ... on Commit {
-              history(first: 10) {
+              history(first: 20) {
                 nodes {
                   oid
                   messageHeadline
@@ -61,7 +62,7 @@ export default function ClientRepoDetails({
             }
           }
         }
-        pullRequests(first: 10, orderBy: { field: UPDATED_AT, direction: DESC }) {
+        pullRequests(first: 20, orderBy: { field: UPDATED_AT, direction: DESC }) {
           nodes {
             id
             number
@@ -130,7 +131,7 @@ export default function ClientRepoDetails({
   const commits = React.useMemo(() => {
     const nodes = (data?.repository?.defaultBranchRef?.target?.history?.nodes ??
       []) as GraphQLCommitNode[];
-    return nodes.slice(0, 10).filter(Boolean) as GraphQLCommitNode[];
+    return nodes.slice(0, 20).filter(Boolean) as GraphQLCommitNode[];
   }, [data]);
 
   const pullRequests = React.useMemo(() => {
@@ -204,16 +205,27 @@ export default function ClientRepoDetails({
           )}
 
           <LanguageUsage languages={chartData} />
-          <Tabs defaultValue="commits" className="mt-4">
+          <Tabs
+            defaultValue="commits"
+            className="mt-4 flex flex-col h-[calc(100vh-23rem)]"
+          >
             <TabsList>
-              <TabsTrigger value="commits">Recent commits</TabsTrigger>
-              <TabsTrigger value="prs">Recent pull requests</TabsTrigger>
+              <TabsTrigger value="commits" className="cursor-pointer">
+                Recent commits
+              </TabsTrigger>
+              <TabsTrigger value="prs" className="cursor-pointer">
+                Recent pull requests
+              </TabsTrigger>
             </TabsList>
-            <TabsContent value="commits">
-              <CommitList commits={commits} repoUrl={repo?.url} />
+            <TabsContent value="commits" className="flex-1 overflow-hidden">
+              <ScrollArea className="h-full">
+                <CommitList commits={commits} repoUrl={repo?.url} />
+              </ScrollArea>
             </TabsContent>
-            <TabsContent value="prs">
-              <PRList prs={pullRequests} />
+            <TabsContent value="prs" className="flex-1 overflow-hidden">
+              <ScrollArea className="h-full">
+                <PRList prs={pullRequests} />
+              </ScrollArea>
             </TabsContent>
           </Tabs>
 
