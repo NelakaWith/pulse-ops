@@ -6,7 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useGithub } from "@/hooks/use-github";
-import type { RestRepo } from "@/types";
+import { useGraphQL } from "@/hooks/use-graphql";
+import type { RestRepo, RepoLanguagesQuery, LanguageChartEntry } from "@/types";
 import { useRepoParams } from "@/hooks/use-repo-params";
 
 type Props = {
@@ -17,12 +18,75 @@ type Props = {
 export default function ClientRepoDetails({ owner, name }: Props) {
   const { owner: ownerToUse, name: nameToUse } = useRepoParams(owner, name);
 
-  const endpoint = React.useMemo(
+  const repoEndpoint = React.useMemo(
     () => `repos/${ownerToUse}/${nameToUse}`,
     [ownerToUse, nameToUse]
   );
-  const { data, loading, error } = useGithub(endpoint);
+  const { data, loading, error } = useGithub(repoEndpoint);
   const repo = (data as unknown as RestRepo) ?? null;
+
+  // Fetch language sizes + colors via GraphQL (gives color metadata)
+  const LANG_QUERY = React.useMemo(
+    () => `
+    query RepoLanguages($owner: String!, $name: String!) {
+      repository(owner: $owner, name: $name) {
+        languages(first: 32) {
+          edges {
+            size
+            node {
+              name
+              color
+            }
+          }
+        }
+      }
+    }
+  `,
+    []
+  );
+
+  const langVars = React.useMemo(
+    () => ({ owner: ownerToUse, name: nameToUse }),
+    [ownerToUse, nameToUse]
+  );
+  const { data: langData } = useGraphQL<RepoLanguagesQuery>(
+    LANG_QUERY,
+    langVars
+  );
+
+  const chartData = React.useMemo<LanguageChartEntry[]>(() => {
+    const edges = ((langData &&
+      langData.repository &&
+      langData.repository.languages &&
+      langData.repository.languages.edges) ||
+      []) as import("@/types").GraphQLLanguageEdge[];
+
+    const languageMap = new Map<string, { size: number; color: string }>();
+
+    edges.forEach((edge) => {
+      const name = edge.node?.name ?? "";
+      const color = edge.node?.color ?? "";
+      const size = edge.size ?? 0;
+      if (!name) return;
+
+      if (languageMap.has(name)) {
+        const existing = languageMap.get(name)!;
+        languageMap.set(name, {
+          size: existing.size + size,
+          color: existing.color || color,
+        });
+      } else {
+        languageMap.set(name, { size, color });
+      }
+    });
+
+    const languageArray = Array.from(languageMap.entries())
+      .map(([name, { size, color }]) => ({ name, value: size, color }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 8);
+
+    return languageArray;
+  }, [langData]);
 
   if (loading) {
     return (
@@ -86,11 +150,29 @@ export default function ClientRepoDetails({ owner, name }: Props) {
             </div>
           )}
 
-          {languages.length > 0 && (
+          {chartData.length > 0 ? (
+            <div className="mt-4 flex flex-col gap-2">
+              {chartData.map((l) => (
+                <div
+                  key={l.name}
+                  className="flex items-center gap-2 text-sm text-muted-foreground"
+                >
+                  <span
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: l.color || "#ccc" }}
+                  />
+                  <span>
+                    {l.name}
+                    {l.value ? ` — ${l.value} bytes` : ""}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : languages.length > 0 ? (
             <div className="mt-4 text-sm text-muted-foreground">
               Languages: {languages.join(", ")}
             </div>
-          )}
+          ) : null}
 
           <div className="mt-6 flex gap-3">
             <a

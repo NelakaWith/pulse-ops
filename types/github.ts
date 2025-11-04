@@ -75,6 +75,32 @@ export type LanguageEdge = {
   };
 };
 
+// GraphQL language node/edge shapes (nullable-aware for client use)
+export type GraphQLLanguageNode = {
+  name?: string | null;
+  color?: string | null;
+};
+
+export type GraphQLLanguageEdge = {
+  size?: number;
+  node?: GraphQLLanguageNode;
+};
+
+export interface RepoLanguagesQuery {
+  repository?: {
+    languages?: {
+      edges?: GraphQLLanguageEdge[] | null;
+    } | null;
+  } | null;
+}
+
+// Chart-friendly language entry used across the app
+export type LanguageChartEntry = {
+  name: string;
+  value: number;
+  color: string;
+};
+
 export type Repository = {
   name: string;
   url?: string;
