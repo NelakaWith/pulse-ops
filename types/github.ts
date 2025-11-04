@@ -106,6 +106,29 @@ export type GraphQLCommitNode = {
   author?: GraphQLCommitAuthor | null;
 } | null;
 
+// --- Pull request shapes
+export type GraphQLPullRequestAuthorUser = {
+  login?: string | null;
+  avatarUrl?: string | null;
+} | null;
+
+export type GraphQLPullRequestAuthor = {
+  login?: string | null;
+  avatarUrl?: string | null;
+} | null;
+
+export type GraphQLPullRequestNode = {
+  id?: string | null;
+  number?: number | null;
+  title?: string | null;
+  url?: string | null;
+  createdAt?: string | null;
+  closedAt?: string | null;
+  mergedAt?: string | null;
+  state?: string | null;
+  author?: GraphQLPullRequestAuthor | null;
+} | null;
+
 export interface RepoLanguagesQuery {
   repository?: {
     languages?: {
@@ -155,6 +178,7 @@ export interface RepoDetailsQuery {
         history?: { nodes?: GraphQLCommitNode[] | null } | null;
       } | null;
     } | null;
+    pullRequests?: { nodes?: GraphQLPullRequestNode[] | null } | null;
   } | null;
 }
 

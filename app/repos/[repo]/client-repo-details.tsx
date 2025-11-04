@@ -10,9 +10,12 @@ import type {
   RepoDetailsQuery,
   LanguageChartEntry,
   GraphQLLanguageEdge,
+  GraphQLPullRequestNode,
+  GraphQLCommitNode,
 } from "@/types";
 import { useRepoParams } from "@/hooks/use-repo-params";
 import CommitList from "./commit-list";
+import PRList from "./pr-list";
 
 export default function ClientRepoDetails({
   owner,
@@ -53,6 +56,19 @@ export default function ClientRepoDetails({
                 }
               }
             }
+          }
+        }
+        pullRequests(first: 10, orderBy: { field: UPDATED_AT, direction: DESC }) {
+          nodes {
+            id
+            number
+            title
+            url
+            createdAt
+            closedAt
+            mergedAt
+            state
+            author { login avatarUrl }
           }
         }
         owner { login avatarUrl }
@@ -110,10 +126,13 @@ export default function ClientRepoDetails({
   // Extract recent commits (default branch history)
   const commits = React.useMemo(() => {
     const nodes = (data?.repository?.defaultBranchRef?.target?.history?.nodes ??
-      []) as import("@/types").GraphQLCommitNode[];
-    return nodes
-      .slice(0, 10)
-      .filter(Boolean) as import("@/types").GraphQLCommitNode[];
+      []) as GraphQLCommitNode[];
+    return nodes.slice(0, 10).filter(Boolean) as GraphQLCommitNode[];
+  }, [data]);
+
+  const pullRequests = React.useMemo(() => {
+    return (data?.repository?.pullRequests?.nodes ??
+      []) as GraphQLPullRequestNode[];
   }, [data]);
 
   if (loading) {
@@ -208,6 +227,7 @@ export default function ClientRepoDetails({
           ) : null}
 
           <CommitList commits={commits} repoUrl={repo?.url} />
+          <PRList prs={pullRequests} />
 
           <div className="mt-6 flex gap-3">
             <a
