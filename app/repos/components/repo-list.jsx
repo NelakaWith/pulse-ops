@@ -99,8 +99,10 @@ function RepoList() {
                     )}
                   </CardContent>
                   <CardFooter className="gap-2">
-                    <Button className="flex-1 cursor-pointer">
-                      More Details
+                    <Button asChild className="flex-1 cursor-pointer">
+                      <Link href={`/repos/${encodeURIComponent(repo.name)}`}>
+                        More Details
+                      </Link>
                     </Button>
                     <Button variant="outline" asChild>
                       <Link

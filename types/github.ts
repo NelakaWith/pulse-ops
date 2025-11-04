@@ -1,3 +1,48 @@
+// -- Repository-related types
+export type RepositoryTopicNode = {
+  topic?: { name?: string } | null;
+} | null;
+
+export type LanguagesNode = { name?: string | null } | null;
+
+export interface GraphQLRepo {
+  id: string;
+  name: string;
+  description?: string | null;
+  url: string;
+  openGraphImageUrl?: string | null;
+  stargazerCount?: number | null;
+  repositoryTopics?: { nodes: RepositoryTopicNode[] } | null;
+  languages?: { nodes: LanguagesNode[] } | null;
+}
+
+export interface RepoQueryResult {
+  repository?: GraphQLRepo | null;
+}
+
+export default GraphQLRepo;
+
+// REST repository shape (from GET /repos/{owner}/{repo})
+// Only the fields we care about are included here.
+export interface RestRepoOwner {
+  login?: string;
+  avatar_url?: string;
+}
+
+export interface RestRepo {
+  id?: number;
+  name?: string;
+  full_name?: string;
+  description?: string | null;
+  html_url?: string;
+  url?: string;
+  topics?: string[];
+  language?: string | null;
+  stargazers_count?: number;
+  owner?: RestRepoOwner | null;
+}
+
+// --- Metrics-related types
 export type Count = { totalCount: number } | null | undefined;
 
 export type ContributionDay = {

@@ -4,7 +4,7 @@ import { useGraphQL } from "@/hooks/use-graphql";
 import UserMetrics from "./components/userMetrics";
 import ContributionChart from "./components/contributionChart";
 import LanguageUsage from "./components/languageUsage";
-import type { User } from "./types";
+import type { User } from "@/types";
 
 const USER_QUERY = `
   query User($login: String!) {

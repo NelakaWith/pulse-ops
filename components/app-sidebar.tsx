@@ -37,8 +37,8 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="py-10">
-            <h2 className="text-4xl font-semibold">
-              Pulse<span className="font-extralight">Ops</span>
+            <h2 className="text-4xl font-semibold text-violet-200">
+              Pulse<span className="font-extralight text-primary">Ops</span>
             </h2>
           </SidebarGroupLabel>
           <SidebarGroupContent>
