@@ -187,7 +187,7 @@ export default function ClientRepoDetails({
   return (
     <section className="w-full">
       <Card>
-        <CardContent>
+        <CardContent className="flex flex-col">
           <h1 className="text-2xl font-bold">{repo?.name ?? name}</h1>
           <p className="text-sm text-muted-foreground mt-2">
             {repo?.description}
@@ -204,7 +204,7 @@ export default function ClientRepoDetails({
           )}
 
           <LanguageUsage languages={chartData} />
-          <Tabs defaultValue="commits" className="mt-4">
+          <Tabs defaultValue="commits" className="mt-4 flex-1">
             <TabsList>
               <TabsTrigger value="commits">Recent commits</TabsTrigger>
               <TabsTrigger value="prs">Recent pull requests</TabsTrigger>
