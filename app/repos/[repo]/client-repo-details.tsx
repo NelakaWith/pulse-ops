@@ -4,9 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 import { useGithub } from "@/hooks/use-github";
 import type { RestRepo } from "@/types";
-import { usePathname } from "next/navigation";
+import { useRepoParams } from "@/hooks/use-repo-params";
 
 type Props = {
   owner: string;
@@ -14,23 +15,7 @@ type Props = {
 };
 
 export default function ClientRepoDetails({ owner, name }: Props) {
-  const pathname = usePathname();
-  let ownerToUse = owner;
-  let nameToUse = name;
-
-  if (!nameToUse && pathname) {
-    const parts = pathname.split("/").filter(Boolean);
-    if (parts.length >= 2 && parts[0] === "repos") {
-      if (parts.length === 2) {
-        // /repos/:repo
-        nameToUse = decodeURIComponent(parts[1]);
-      } else {
-        // /repos/:owner/:repo
-        ownerToUse = decodeURIComponent(parts[1]) || ownerToUse;
-        nameToUse = decodeURIComponent(parts.slice(2).join("/"));
-      }
-    }
-  }
+  const { owner: ownerToUse, name: nameToUse } = useRepoParams(owner, name);
 
   const endpoint = React.useMemo(
     () => `repos/${ownerToUse}/${nameToUse}`,
@@ -94,12 +79,9 @@ export default function ClientRepoDetails({ owner, name }: Props) {
           {topics.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {topics.map((t) => (
-                <span
-                  key={t}
-                  className="text-xs bg-muted/10 text-muted-foreground px-2 py-0.5 rounded-full"
-                >
+                <Badge key={t} variant="outline">
                   {t}
-                </span>
+                </Badge>
               ))}
             </div>
           )}
