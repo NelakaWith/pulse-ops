@@ -10,7 +10,7 @@ export default function PRList({ prs }: Props) {
   if (!prs || prs.length === 0) return null;
 
   return (
-    <div className="mt-6">
+    <section className="w-full">
       <h3 className="text-lg font-medium">Recent pull requests</h3>
       <ul className="mt-2 space-y-3 text-sm text-muted-foreground">
         {prs.map((pr, idx) => {
@@ -41,6 +41,6 @@ export default function PRList({ prs }: Props) {
           );
         })}
       </ul>
-    </div>
+    </section>
   );
 }

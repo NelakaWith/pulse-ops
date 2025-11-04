@@ -5,7 +5,13 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGraphQL } from "@/hooks/use-graphql";
+import { useRepoParams } from "@/hooks/use-repo-params";
+import CommitList from "./commit-list";
+import PRList from "./pr-list";
+import LanguageUsage from "./language-usage";
+
 import type {
   RepoDetailsQuery,
   LanguageChartEntry,
@@ -13,10 +19,6 @@ import type {
   GraphQLPullRequestNode,
   GraphQLCommitNode,
 } from "@/types";
-import { useRepoParams } from "@/hooks/use-repo-params";
-import CommitList from "./commit-list";
-import PRList from "./pr-list";
-import LanguageUsage from "./language-usage";
 
 export default function ClientRepoDetails({
   owner,
@@ -202,8 +204,18 @@ export default function ClientRepoDetails({
           )}
 
           <LanguageUsage languages={chartData} />
-          <CommitList commits={commits} repoUrl={repo?.url} />
-          <PRList prs={pullRequests} />
+          <Tabs defaultValue="commits" className="mt-4">
+            <TabsList>
+              <TabsTrigger value="commits">Recent commits</TabsTrigger>
+              <TabsTrigger value="prs">Recent pull requests</TabsTrigger>
+            </TabsList>
+            <TabsContent value="commits">
+              <CommitList commits={commits} repoUrl={repo?.url} />
+            </TabsContent>
+            <TabsContent value="prs">
+              <PRList prs={pullRequests} />
+            </TabsContent>
+          </Tabs>
 
           <div className="mt-6 flex gap-3">
             <a

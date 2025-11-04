@@ -11,7 +11,7 @@ export default function LanguageUsage({ languages }: Props) {
   if (!languages || languages.length === 0) return null;
 
   return (
-    <div className="mt-4 flex flex-col gap-2">
+    <section className="mt-4 flex flex-col gap-2">
       {languages.map((l) => (
         <div
           key={l.name}
@@ -27,6 +27,6 @@ export default function LanguageUsage({ languages }: Props) {
           </span>
         </div>
       ))}
-    </div>
+    </section>
   );
 }
