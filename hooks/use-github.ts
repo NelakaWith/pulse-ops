@@ -19,7 +19,9 @@ export function useGithub(endpoint?: string | null) {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.get("/api/github", { params: { endpoint: ep } });
+      const res = await axios.get("/api/github-rest", {
+        params: { endpoint: ep },
+      });
       setData(res.data);
     } catch (err) {
       const message = err instanceof Error ? err : new Error(String(err));
