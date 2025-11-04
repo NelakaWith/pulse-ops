@@ -12,6 +12,7 @@ import type {
   GraphQLLanguageEdge,
 } from "@/types";
 import { useRepoParams } from "@/hooks/use-repo-params";
+import CommitList from "./commit-list";
 
 export default function ClientRepoDetails({
   owner,
@@ -37,6 +38,22 @@ export default function ClientRepoDetails({
         }
         languages(first: 32) {
           edges { size node { name color } }
+        }
+        defaultBranchRef {
+          name
+          target {
+            ... on Commit {
+              history(first: 10) {
+                nodes {
+                  oid
+                  messageHeadline
+                  message
+                  committedDate
+                  author { name email user { login avatarUrl }}
+                }
+              }
+            }
+          }
         }
         owner { login avatarUrl }
       }
@@ -88,6 +105,15 @@ export default function ClientRepoDetails({
       .slice(0, 8);
 
     return languageArray;
+  }, [data]);
+
+  // Extract recent commits (default branch history)
+  const commits = React.useMemo(() => {
+    const nodes = (data?.repository?.defaultBranchRef?.target?.history?.nodes ??
+      []) as import("@/types").GraphQLCommitNode[];
+    return nodes
+      .slice(0, 10)
+      .filter(Boolean) as import("@/types").GraphQLCommitNode[];
   }, [data]);
 
   if (loading) {
@@ -180,6 +206,8 @@ export default function ClientRepoDetails({
               Languages: {languages.join(", ")}
             </div>
           ) : null}
+
+          <CommitList commits={commits} repoUrl={repo?.url} />
 
           <div className="mt-6 flex gap-3">
             <a

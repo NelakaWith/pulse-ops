@@ -86,10 +86,47 @@ export type GraphQLLanguageEdge = {
   node?: GraphQLLanguageNode;
 };
 
+// --- Commit-related GraphQL shapes
+export type GraphQLCommitAuthorUser = {
+  login?: string | null;
+  avatarUrl?: string | null;
+} | null;
+
+export type GraphQLCommitAuthor = {
+  name?: string | null;
+  email?: string | null;
+  user?: GraphQLCommitAuthorUser | null;
+} | null;
+
+export type GraphQLCommitNode = {
+  oid?: string | null;
+  messageHeadline?: string | null;
+  message?: string | null;
+  committedDate?: string | null;
+  author?: GraphQLCommitAuthor | null;
+} | null;
+
 export interface RepoLanguagesQuery {
   repository?: {
     languages?: {
       edges?: GraphQLLanguageEdge[] | null;
+    } | null;
+  } | null;
+}
+
+// Query shape for listing user repositories (used in the repo list)
+export interface ReposQuery {
+  user?: {
+    repositories?: {
+      nodes?: Array<{
+        id?: string | null;
+        name?: string | null;
+        description?: string | null;
+        repositoryTopics?: { nodes?: RepositoryTopicNode[] | null } | null;
+        openGraphImageUrl?: string | null;
+        url?: string | null;
+        stargazerCount?: number | null;
+      } | null> | null;
     } | null;
   } | null;
 }
@@ -112,6 +149,12 @@ export interface RepoDetailsQuery {
     repositoryTopics?: { nodes?: RepositoryTopicNode[] | null } | null;
     languages?: { edges?: GraphQLLanguageEdge[] | null } | null;
     owner?: { login?: string | null; avatarUrl?: string | null } | null;
+    defaultBranchRef?: {
+      name?: string | null;
+      target?: {
+        history?: { nodes?: GraphQLCommitNode[] | null } | null;
+      } | null;
+    } | null;
   } | null;
 }
 
