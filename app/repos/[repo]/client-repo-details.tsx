@@ -5,61 +5,63 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { useGithub } from "@/hooks/use-github";
 import { useGraphQL } from "@/hooks/use-graphql";
-import type { RestRepo, RepoLanguagesQuery, LanguageChartEntry } from "@/types";
+import type {
+  RepoDetailsQuery,
+  LanguageChartEntry,
+  GraphQLLanguageEdge,
+} from "@/types";
 import { useRepoParams } from "@/hooks/use-repo-params";
 
-type Props = {
+export default function ClientRepoDetails({
+  owner,
+  name,
+}: {
   owner: string;
   name: string;
-};
-
-export default function ClientRepoDetails({ owner, name }: Props) {
+}) {
   const { owner: ownerToUse, name: nameToUse } = useRepoParams(owner, name);
 
-  const repoEndpoint = React.useMemo(
-    () => `repos/${ownerToUse}/${nameToUse}`,
-    [ownerToUse, nameToUse]
-  );
-  const { data, loading, error } = useGithub(repoEndpoint);
-  const repo = (data as unknown as RestRepo) ?? null;
-
-  // Fetch language sizes + colors via GraphQL (gives color metadata)
-  const LANG_QUERY = React.useMemo(
+  // Single GraphQL query that fetches repo details, topics, and languages (with color)
+  const REPO_QUERY = React.useMemo(
     () => `
-    query RepoLanguages($owner: String!, $name: String!) {
+    query RepoDetails($owner: String!, $name: String!) {
       repository(owner: $owner, name: $name) {
-        languages(first: 32) {
-          edges {
-            size
-            node {
-              name
-              color
-            }
-          }
+        id
+        name
+        description
+        url
+        stargazerCount
+        repositoryTopics(first: 20) {
+          nodes { topic { name } }
         }
+        languages(first: 32) {
+          edges { size node { name color } }
+        }
+        owner { login avatarUrl }
       }
     }
   `,
     []
   );
 
-  const langVars = React.useMemo(
+  const vars = React.useMemo(
     () => ({ owner: ownerToUse, name: nameToUse }),
     [ownerToUse, nameToUse]
   );
-  const { data: langData } = useGraphQL<RepoLanguagesQuery>(
-    LANG_QUERY,
-    langVars
+  const { data, loading, error } = useGraphQL<RepoDetailsQuery>(
+    REPO_QUERY,
+    vars
   );
 
+  const repo = (data && data.repository) ?? null;
+
   const chartData = React.useMemo<LanguageChartEntry[]>(() => {
-    const edges = ((langData &&
-      langData.repository &&
-      langData.repository.languages &&
-      langData.repository.languages.edges) ||
-      []) as import("@/types").GraphQLLanguageEdge[];
+    const edges = ((data &&
+      data.repository &&
+      data.repository.languages &&
+      data.repository.languages.edges) ||
+      []) as GraphQLLanguageEdge[];
 
     const languageMap = new Map<string, { size: number; color: string }>();
 
@@ -86,7 +88,7 @@ export default function ClientRepoDetails({ owner, name }: Props) {
       .slice(0, 8);
 
     return languageArray;
-  }, [langData]);
+  }, [data]);
 
   if (loading) {
     return (
@@ -125,11 +127,16 @@ export default function ClientRepoDetails({ owner, name }: Props) {
     );
   }
 
-  const topics: string[] = Array.isArray(repo?.topics)
-    ? (repo!.topics as string[])
-    : [];
-  const languages: string[] = repo?.language ? [repo.language] : [];
-  const htmlUrl = repo?.html_url ?? "";
+  const topics: string[] = (
+    (repo?.repositoryTopics && repo.repositoryTopics.nodes) ||
+    []
+  )
+    .map((n) => n?.topic?.name ?? "")
+    .filter(Boolean) as string[];
+
+  // Keep a simple fallback for older fields — GraphQL provides languages in chartData
+  const languages: string[] = [];
+  const htmlUrl = repo?.url ?? "";
 
   return (
     <section className="w-full">

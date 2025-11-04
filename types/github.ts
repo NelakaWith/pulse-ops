@@ -101,6 +101,20 @@ export type LanguageChartEntry = {
   color: string;
 };
 
+// Repository details including topics and language edges (for a single repo query)
+export interface RepoDetailsQuery {
+  repository?: {
+    id?: string;
+    name?: string;
+    description?: string | null;
+    url?: string;
+    stargazerCount?: number | null;
+    repositoryTopics?: { nodes?: RepositoryTopicNode[] | null } | null;
+    languages?: { edges?: GraphQLLanguageEdge[] | null } | null;
+    owner?: { login?: string | null; avatarUrl?: string | null } | null;
+  } | null;
+}
+
 export type Repository = {
   name: string;
   url?: string;
