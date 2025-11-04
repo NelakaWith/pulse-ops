@@ -11,8 +11,7 @@ export default function PRList({ prs }: Props) {
 
   return (
     <section className="w-full">
-      <h3 className="text-lg font-medium">Recent pull requests</h3>
-      <ul className="mt-2 space-y-3 text-sm text-muted-foreground">
+      <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
         {prs.map((pr, idx) => {
           const id = pr?.id ?? `pr-${idx}`;
           const title = pr?.title ?? `#${pr?.number ?? ""}`;

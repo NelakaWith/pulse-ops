@@ -12,8 +12,7 @@ export default function CommitList({ commits, repoUrl }: Props) {
 
   return (
     <section className="w-full">
-      <h3 className="text-lg font-medium">Recent commits</h3>
-      <ul className="mt-2 space-y-3 text-sm text-muted-foreground">
+      <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
         {commits.map((c, idx) => {
           const oid = c?.oid ?? undefined;
           const message = c?.message
