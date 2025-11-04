@@ -3,10 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useGithub } from "@/hooks/use-github";
 import type { RestRepo } from "@/types";
-import { usePathname, useSearchParams } from "next/navigation";
-import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 type Props = {
   owner: string;
@@ -14,8 +14,6 @@ type Props = {
 };
 
 export default function ClientRepoDetails({ owner, name }: Props) {
-  // Call hooks unconditionally at the top of the component to preserve hook order
-  const search = useSearchParams();
   const pathname = usePathname();
   let ownerToUse = owner;
   let nameToUse = name;
@@ -44,11 +42,9 @@ export default function ClientRepoDetails({ owner, name }: Props) {
   if (loading) {
     return (
       <div className="p-6">
-        <div className="animate-pulse">
-          <div className="h-64 bg-gray-200 rounded mb-4" />
-          <div className="h-6 bg-gray-200 rounded mb-2 w-1/3" />
-          <div className="h-4 bg-gray-200 rounded w-2/3" />
-        </div>
+        <Skeleton className="h-64 mb-4" />
+        <Skeleton className="h-6 mb-2 w-1/3" />
+        <Skeleton className="h-4 w-2/3" />
       </div>
     );
   }
@@ -85,26 +81,11 @@ export default function ClientRepoDetails({ owner, name }: Props) {
     : [];
   const languages: string[] = repo?.language ? [repo.language] : [];
   const htmlUrl = repo?.html_url ?? "";
-  const ogFromQuery = search?.get("og") ?? undefined;
-  const previewImage = ogFromQuery ?? repo?.owner?.avatar_url;
 
   return (
-    <main className="p-6">
+    <section className="w-full">
       <Card>
         <CardContent>
-          {previewImage && (
-            <div className="mb-4">
-              <Image
-                src={previewImage}
-                alt={`${repo?.name ?? name} preview`}
-                className="w-full h-80 object-cover rounded-md"
-                loading="eager"
-                width={500}
-                height={300}
-              />
-            </div>
-          )}
-
           <h1 className="text-2xl font-bold">{repo?.name ?? name}</h1>
           <p className="text-sm text-muted-foreground mt-2">
             {repo?.description}
@@ -144,6 +125,6 @@ export default function ClientRepoDetails({ owner, name }: Props) {
           </div>
         </CardContent>
       </Card>
-    </main>
+    </section>
   );
 }
