@@ -100,7 +100,15 @@ function RepoList() {
                   </CardContent>
                   <CardFooter className="gap-2">
                     <Button asChild className="flex-1 cursor-pointer">
-                      <Link href={`/repos/${encodeURIComponent(repo.name)}`}>
+                      <Link
+                        href={`/repos/${encodeURIComponent(repo.name)}${
+                          repo.openGraphImageUrl
+                            ? `?og=${encodeURIComponent(
+                                repo.openGraphImageUrl
+                              )}`
+                            : ""
+                        }`}
+                      >
                         More Details
                       </Link>
                     </Button>

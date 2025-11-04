@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { useGithub } from "@/hooks/use-github";
 import type { RestRepo } from "@/types";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 type Props = {
   owner: string;
@@ -14,6 +14,8 @@ type Props = {
 };
 
 export default function ClientRepoDetails({ owner, name }: Props) {
+  // Call hooks unconditionally at the top of the component to preserve hook order
+  const search = useSearchParams();
   const pathname = usePathname();
   let ownerToUse = owner;
   let nameToUse = name;
@@ -83,7 +85,8 @@ export default function ClientRepoDetails({ owner, name }: Props) {
     : [];
   const languages: string[] = repo?.language ? [repo.language] : [];
   const htmlUrl = repo?.html_url ?? "";
-  const previewImage = repo?.owner?.avatar_url;
+  const ogFromQuery = search?.get("og") ?? undefined;
+  const previewImage = ogFromQuery ?? repo?.owner?.avatar_url;
 
   return (
     <main className="p-6">
