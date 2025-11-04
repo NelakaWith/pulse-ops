@@ -18,7 +18,6 @@ export default function LanguageUsage({ languages }: Props) {
 
   return (
     <section className="mt-4 flex flex-col gap-3">
-      {/* Horizontal bar showing language distribution */}
       <div className="flex w-full h-2 rounded-full overflow-hidden">
         {languagesWithPercentage.map((lang) => (
           <div
@@ -32,8 +31,6 @@ export default function LanguageUsage({ languages }: Props) {
           />
         ))}
       </div>
-
-      {/* Language list with percentages */}
       <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted-foreground">
         {languagesWithPercentage.map((lang) => (
           <div key={lang.name} className="flex items-center gap-1.5">
