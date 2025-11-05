@@ -11,13 +11,14 @@ type User = {
 type UserContextType = {
   user: User | null;
   setUser: (user: User | null) => void;
+  logout: () => void;
   isLoading: boolean;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  // Initialize user from localStorage or default
+  // Initialize user from localStorage (no default user)
   const [user, setUser] = useState<User | null>(() => {
     if (typeof window === "undefined") return null;
 
@@ -31,13 +32,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    // Set default user for now
-    const defaultUser = {
-      login: "NelakaWith",
-      name: "Nelaka With",
-    };
-    localStorage.setItem("github_user", JSON.stringify(defaultUser));
-    return defaultUser;
+    return null;
   });
 
   const [isLoading] = useState(false);
@@ -51,8 +46,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem("github_user");
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser: handleSetUser, isLoading }}>
+    <UserContext.Provider
+      value={{ user, setUser: handleSetUser, logout: handleLogout, isLoading }}
+    >
       {children}
     </UserContext.Provider>
   );

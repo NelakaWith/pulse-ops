@@ -1,4 +1,8 @@
-import { Activity, FolderGit, TrendingUpDown } from "lucide-react";
+"use client";
+
+import { Activity, FolderGit, TrendingUpDown, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/contexts/user-context";
 
 import {
   Sidebar,
@@ -32,6 +36,14 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const router = useRouter();
+  const { user, logout } = useUser();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/auth");
+  };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -56,6 +68,14 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {user && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={handleLogout}>
+                    <LogOut />
+                    <span>Logout</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

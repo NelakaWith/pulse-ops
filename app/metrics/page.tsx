@@ -73,14 +73,27 @@ const USER_QUERY = `
 export default function MetricsPage() {
   const { user: currentUser } = useUser();
   const variables = useMemo(
-    () => ({ login: currentUser?.login ?? "NelakaWith" }),
+    () => ({ login: currentUser?.login ?? "" }),
     [currentUser?.login]
   );
   const { data, loading, error } = useGraphQL<{ user: User }>(
-    USER_QUERY,
+    currentUser?.login ? USER_QUERY : null,
     variables
   );
   const user: User = data?.user ?? null;
+
+  if (!currentUser?.login) {
+    return (
+      <main className="p-8 w-full flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <p className="text-lg mb-4">Please log in to view metrics</p>
+          <a href="/auth" className="text-primary underline">
+            Go to Login
+          </a>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="p-8 w-full">

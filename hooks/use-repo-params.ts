@@ -17,7 +17,7 @@ export function useRepoParams(owner?: string, name?: string) {
   const { user } = useUser();
   const pathname = usePathname();
 
-  const defaultOwner = user?.login ?? "NelakaWith";
+  const defaultOwner = user?.login ?? "";
 
   let ownerToUse = owner ?? defaultOwner;
   let nameToUse = name ?? "";

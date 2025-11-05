@@ -41,15 +41,32 @@ function RepoList() {
   );
 
   const variables = React.useMemo(
-    () => ({ login: user?.login ?? "NelakaWith" }),
+    () => ({ login: user?.login ?? "" }),
     [user?.login]
   );
   const { data, loading, error } = useGraphQL<ReposQuery>(
-    REPO_QUERY,
+    user?.login ? REPO_QUERY : null,
     variables
   );
 
   const repos = data?.user?.repositories?.nodes ?? [];
+
+  if (!user?.login) {
+    return (
+      <section className="w-full flex items-center justify-center min-h-[400px]">
+        <Card className="max-w-md">
+          <CardContent className="pt-6">
+            <p className="text-center text-lg mb-4">
+              Please log in to view repositories
+            </p>
+            <Link href="/auth">
+              <Button className="w-full">Go to Login</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </section>
+    );
+  }
 
   return (
     <section className="w-full">

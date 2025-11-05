@@ -33,9 +33,16 @@ export async function GET(req: Request) {
   }
 
   try {
-    // Extract login from URL search params or use default
+    // Extract login from URL search params
     const { searchParams } = new URL(req.url);
-    const login = searchParams.get("login") ?? "NelakaWith";
+    const login = searchParams.get("login");
+
+    if (!login) {
+      return NextResponse.json(
+        { error: "GitHub username is required" },
+        { status: 400 }
+      );
+    }
 
     const res = await fetch(GITHUB_GRAPHQL, {
       method: "POST",
@@ -70,7 +77,15 @@ export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({}));
     const query = body?.query ?? QUERY;
-    const variables = body?.variables ?? { login: "NelakaWith" };
+    const variables = body?.variables ?? {};
+
+    // Validate that login is provided in variables
+    if (!variables.login) {
+      return NextResponse.json(
+        { error: "GitHub username is required in variables" },
+        { status: 400 }
+      );
+    }
 
     const res = await fetch(GITHUB_GRAPHQL, {
       method: "POST",
