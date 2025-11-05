@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 
 type User = {
   login: string;
@@ -18,42 +24,48 @@ type UserContextType = {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-  // Initialize user from localStorage (no default user)
-  const [user, setUser] = useState<User | null>(() => {
-    if (typeof window === "undefined") return null;
+  // Always initialize to null on both server and client to avoid hydration mismatch
+  const [user, setUserState] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const mountedRef = useRef(false);
 
+  // Load user from localStorage after hydration
+  // This effect runs once on mount to hydrate user state from localStorage
+  // The setState calls here are intentional and don't cause cascading renders
+  useEffect(() => {
+    mountedRef.current = true;
     const storedUser = localStorage.getItem("github_user");
     if (storedUser) {
       try {
-        return JSON.parse(storedUser);
+        const parsed = JSON.parse(storedUser);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setUserState(parsed);
       } catch (error) {
         console.error("Failed to parse stored user:", error);
         localStorage.removeItem("github_user");
       }
     }
+    setIsLoading(false);
+  }, []);
 
-    return null;
-  });
-
-  const [isLoading] = useState(false);
-
-  const handleSetUser = (newUser: User | null) => {
-    setUser(newUser);
-    if (newUser) {
-      localStorage.setItem("github_user", JSON.stringify(newUser));
-    } else {
-      localStorage.removeItem("github_user");
+  const setUser = (newUser: User | null) => {
+    setUserState(newUser);
+    if (mountedRef.current) {
+      if (newUser) {
+        localStorage.setItem("github_user", JSON.stringify(newUser));
+      } else {
+        localStorage.removeItem("github_user");
+      }
     }
   };
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem("github_user");
   };
 
   return (
     <UserContext.Provider
-      value={{ user, setUser: handleSetUser, logout: handleLogout, isLoading }}
+      value={{ user, setUser, logout: handleLogout, isLoading }}
     >
       {children}
     </UserContext.Provider>
