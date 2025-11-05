@@ -56,7 +56,7 @@ function AuthPage() {
       });
 
       // Redirect to dashboard or home
-      router.push("/dashboard");
+      router.push("/metrics");
     } catch {
       setError("An error occurred. Please try again.");
       setIsLoading(false);

@@ -6,6 +6,8 @@ import UserMetrics from "./components/userMetrics";
 import ContributionChart from "./components/contributionChart";
 import LanguageUsage from "./components/languageUsage";
 import type { User } from "@/types";
+import { AuthGuard } from "@/components/auth-guard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const USER_QUERY = `
   query User($login: String!) {
@@ -82,40 +84,46 @@ export default function MetricsPage() {
   );
   const user: User = data?.user ?? null;
 
-  if (!currentUser?.login) {
-    return (
-      <main className="p-8 w-full flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <p className="text-lg mb-4">Please log in to view metrics</p>
-          <a href="/auth" className="text-primary underline">
-            Go to Login
-          </a>
+  return (
+    <AuthGuard
+      loadingFallback={
+        <main className="p-8 w-full">
+          <div className="space-y-6">
+            <Skeleton className="h-48 w-full" />
+            <div className="flex gap-4">
+              <Skeleton className="h-96 flex-2" />
+              <Skeleton className="h-96 flex-1" />
+            </div>
+          </div>
+        </main>
+      }
+    >
+      <main className="p-8 w-full">
+        <div className="space-y-6 w-full">
+          <UserMetrics
+            user={user}
+            loading={loading}
+            error={error}
+            data={data}
+          />
+          <div className="flex gap-4">
+            {user?.contributionsCollection?.contributionCalendar && (
+              <div className="flex-2">
+                <ContributionChart
+                  contributionCalendar={
+                    user.contributionsCollection.contributionCalendar
+                  }
+                />
+              </div>
+            )}
+            {data?.user?.repositories && (
+              <div className="flex-1">
+                <LanguageUsage repositories={data.user.repositories} />
+              </div>
+            )}
+          </div>
         </div>
       </main>
-    );
-  }
-
-  return (
-    <main className="p-8 w-full">
-      <div className="space-y-6 w-full">
-        <UserMetrics user={user} loading={loading} error={error} data={data} />
-        <div className="flex gap-4">
-          {user?.contributionsCollection?.contributionCalendar && (
-            <div className="flex-2">
-              <ContributionChart
-                contributionCalendar={
-                  user.contributionsCollection.contributionCalendar
-                }
-              />
-            </div>
-          )}
-          {data?.user?.repositories && (
-            <div className="flex-1">
-              <LanguageUsage repositories={data.user.repositories} />
-            </div>
-          )}
-        </div>
-      </div>
-    </main>
+    </AuthGuard>
   );
 }
