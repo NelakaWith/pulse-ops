@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { FolderGit, GitGraph, GitPullRequestArrow, Rocket } from "lucide-react";
-import type { UserMetricsProps } from "../types";
+import type { UserMetricsProps } from "@/types";
 
 function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
   const totalReleases = useMemo(() => {

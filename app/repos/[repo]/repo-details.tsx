@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LoadingState } from "@/components/loading-state";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -149,23 +149,11 @@ export default function RepoDetails({
 
   // If no valid owner/name, show loading state (check after all hooks)
   if (shouldSkip) {
-    return (
-      <div className="p-6">
-        <Skeleton className="h-64 mb-4" />
-        <Skeleton className="h-6 mb-2 w-1/3" />
-        <Skeleton className="h-4 w-2/3" />
-      </div>
-    );
+    return <LoadingState message="Loading repository..." />;
   }
 
   if (loading) {
-    return (
-      <div className="p-6">
-        <Skeleton className="h-64 mb-4" />
-        <Skeleton className="h-6 mb-2 w-1/3" />
-        <Skeleton className="h-4 w-2/3" />
-      </div>
-    );
+    return <LoadingState message="Loading repository details..." />;
   }
 
   if (error) {

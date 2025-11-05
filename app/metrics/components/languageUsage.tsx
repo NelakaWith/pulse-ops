@@ -8,7 +8,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import type { LanguageUsageProps } from "../types";
+import type { LanguageUsageProps } from "@/types";
 
 const chartConfig = {
   usage: {

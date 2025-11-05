@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LoadingState } from "@/components/loading-state";
 import { useGraphQL } from "@/hooks/use-graphql";
 import type { ReposQuery } from "@/types";
 import Image from "next/image";
@@ -55,24 +55,18 @@ function RepoList() {
   return (
     <AuthGuard
       loadingFallback={
-        <div className="grid grid-cols-4 gap-4 mt-4 w-full">
-          {Array.from({ length: 12 }).map((_, index) => (
-            <div className="flex flex-col space-y-3" key={index}>
-              <Skeleton className="h-[400px] flx rounded-xl" />
-            </div>
-          ))}
-        </div>
+        <LoadingState
+          message="Loading repositories..."
+          className="min-h-[400px]"
+        />
       }
     >
       <section className="w-full">
         {loading && (
-          <div className="grid grid-cols-4 gap-4 mt-4 w-full">
-            {Array.from({ length: 12 }).map((_, index) => (
-              <div className="flex flex-col space-y-3" key={index}>
-                <Skeleton className="h-[400px] flx rounded-xl" />
-              </div>
-            ))}
-          </div>
+          <LoadingState
+            message="Loading repositories..."
+            className="min-h-[400px]"
+          />
         )}
         {error && <p>Error: {error.message}</p>}
         {repos && (

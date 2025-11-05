@@ -3,7 +3,7 @@
 import { useUser } from "@/contexts/user-context";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LoadingState } from "@/components/loading-state";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -33,12 +33,10 @@ export function AuthGuard({
     return (
       <>
         {loadingFallback || (
-          <section className="w-full flex items-center justify-center min-h-[400px]">
-            <div className="space-y-4">
-              <Skeleton className="h-12 w-64" />
-              <Skeleton className="h-64 w-96" />
-            </div>
-          </section>
+          <LoadingState
+            message="Checking authentication..."
+            className="min-h-[400px]"
+          />
         )}
       </>
     );

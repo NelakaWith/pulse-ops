@@ -7,7 +7,7 @@ import ContributionChart from "./components/contributionChart";
 import LanguageUsage from "./components/languageUsage";
 import type { User } from "@/types";
 import { AuthGuard } from "@/components/auth-guard";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LoadingState } from "@/components/loading-state";
 
 const USER_QUERY = `
   query User($login: String!) {
@@ -87,15 +87,7 @@ export default function MetricsPage() {
   return (
     <AuthGuard
       loadingFallback={
-        <main className="p-8 w-full">
-          <div className="space-y-6">
-            <Skeleton className="h-48 w-full" />
-            <div className="flex gap-4">
-              <Skeleton className="h-96 flex-2" />
-              <Skeleton className="h-96 flex-1" />
-            </div>
-          </div>
-        </main>
+        <LoadingState message="Loading metrics..." className="min-h-screen" />
       }
     >
       <main className="p-8 w-full">

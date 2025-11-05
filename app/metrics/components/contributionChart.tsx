@@ -8,7 +8,11 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import type { ContributionChartProps } from "../types";
+import type { ContributionCalendar } from "@/types";
+
+type ContributionChartProps = {
+  contributionCalendar: ContributionCalendar;
+};
 
 const chartConfig = {
   contributions: {
