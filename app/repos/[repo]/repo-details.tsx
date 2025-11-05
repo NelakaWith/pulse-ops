@@ -21,7 +21,7 @@ import type {
   GraphQLCommitNode,
 } from "@/types";
 
-export default function ClientRepoDetails({
+export default function RepoDetails({
   owner,
   name,
 }: {
@@ -86,8 +86,16 @@ export default function ClientRepoDetails({
     () => ({ owner: ownerToUse, name: nameToUse }),
     [ownerToUse, nameToUse]
   );
+
+  // Skip query if owner or name is missing or empty
+  const shouldSkip =
+    !ownerToUse ||
+    !nameToUse ||
+    ownerToUse.trim() === "" ||
+    nameToUse.trim() === "";
+
   const { data, loading, error } = useGraphQL<RepoDetailsQuery>(
-    REPO_QUERY,
+    shouldSkip ? null : REPO_QUERY,
     vars
   );
 
@@ -138,6 +146,17 @@ export default function ClientRepoDetails({
     return (data?.repository?.pullRequests?.nodes ??
       []) as GraphQLPullRequestNode[];
   }, [data]);
+
+  // If no valid owner/name, show loading state (check after all hooks)
+  if (shouldSkip) {
+    return (
+      <div className="p-6">
+        <Skeleton className="h-64 mb-4" />
+        <Skeleton className="h-6 mb-2 w-1/3" />
+        <Skeleton className="h-4 w-2/3" />
+      </div>
+    );
+  }
 
   if (loading) {
     return (

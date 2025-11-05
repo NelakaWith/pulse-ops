@@ -79,8 +79,10 @@ export async function POST(req: Request) {
     const query = body?.query ?? QUERY;
     const variables = body?.variables ?? {};
 
-    // Validate that login is provided in variables
-    if (!variables.login) {
+    // Validate that required variables are provided
+    // Check for login (user queries) or owner (repository queries)
+    const hasRequiredAuth = variables.login || variables.owner;
+    if (!hasRequiredAuth && query && query.includes("$login")) {
       return NextResponse.json(
         { error: "GitHub username is required in variables" },
         { status: 400 }
