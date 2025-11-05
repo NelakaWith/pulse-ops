@@ -35,7 +35,7 @@ export function AuthGuard({
         {loadingFallback || (
           <LoadingState
             message="Checking authentication..."
-            className="min-h-[400px]"
+            className="min-h-screen"
           />
         )}
       </>

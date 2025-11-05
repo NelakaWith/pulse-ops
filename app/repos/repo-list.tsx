@@ -53,23 +53,16 @@ function RepoList() {
   const repos = data?.user?.repositories?.nodes ?? [];
 
   return (
-    <AuthGuard
-      loadingFallback={
+    <AuthGuard>
+      {loading ? (
         <LoadingState
           message="Loading repositories..."
-          className="min-h-[400px]"
+          className="min-h-screen"
         />
-      }
-    >
-      <section className="w-full">
-        {loading && (
-          <LoadingState
-            message="Loading repositories..."
-            className="min-h-[400px]"
-          />
-        )}
-        {error && <p>Error: {error.message}</p>}
-        {repos && (
+      ) : error ? (
+        <p className="text-red-500 p-8">Error: {error.message}</p>
+      ) : (
+        <section className="w-full">
           <div className="grid grid-cols-4 gap-4 mt-4">
             {Array.isArray(repos) &&
               repos
@@ -140,8 +133,8 @@ function RepoList() {
                   );
                 })}
           </div>
-        )}
-      </section>
+        </section>
+      )}
     </AuthGuard>
   );
 }

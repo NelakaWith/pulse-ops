@@ -85,37 +85,37 @@ export default function MetricsPage() {
   const user: User = data?.user ?? null;
 
   return (
-    <AuthGuard
-      loadingFallback={
+    <AuthGuard>
+      {loading ? (
         <LoadingState message="Loading metrics..." className="min-h-screen" />
-      }
-    >
-      <main className="p-8 w-full">
-        <div className="space-y-6 w-full">
-          <UserMetrics
-            user={user}
-            loading={loading}
-            error={error}
-            data={data}
-          />
-          <div className="flex gap-4">
-            {user?.contributionsCollection?.contributionCalendar && (
-              <div className="flex-2">
-                <ContributionChart
-                  contributionCalendar={
-                    user.contributionsCollection.contributionCalendar
-                  }
-                />
-              </div>
-            )}
-            {data?.user?.repositories && (
-              <div className="flex-1">
-                <LanguageUsage repositories={data.user.repositories} />
-              </div>
-            )}
+      ) : (
+        <main className="p-8 w-full">
+          <div className="space-y-6 w-full">
+            <UserMetrics
+              user={user}
+              loading={loading}
+              error={error}
+              data={data}
+            />
+            <div className="flex gap-4">
+              {user?.contributionsCollection?.contributionCalendar && (
+                <div className="flex-2">
+                  <ContributionChart
+                    contributionCalendar={
+                      user.contributionsCollection.contributionCalendar
+                    }
+                  />
+                </div>
+              )}
+              {data?.user?.repositories && (
+                <div className="flex-1">
+                  <LanguageUsage repositories={data.user.repositories} />
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      )}
     </AuthGuard>
   );
 }

@@ -2,10 +2,9 @@ import Image from "next/image";
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { FolderGit, GitGraph, GitPullRequestArrow, Rocket } from "lucide-react";
-import { LoadingState } from "@/components/loading-state";
 import type { UserMetricsProps } from "@/types";
 
-function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
+function UserMetrics({ user, error, data }: UserMetricsProps) {
   const totalReleases = useMemo(() => {
     const nodes = user?.repositories?.nodes ?? [];
     return nodes.reduce(
@@ -53,16 +52,12 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
     ];
   }, [user, totalReleases]);
 
-  if (loading) {
-    return <LoadingState message="Loading metrics..." />;
-  }
-
   if (error) {
     return <p className="text-red-500">Error: {error.message}</p>;
   }
 
   return (
-    <>
+    <section className="w-full">
       {user ? (
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
@@ -111,7 +106,7 @@ function UserMetrics({ user, loading, error, data }: UserMetricsProps) {
           {data ? JSON.stringify(data, null, 2) : "No data"}
         </pre>
       )}
-    </>
+    </section>
   );
 }
 

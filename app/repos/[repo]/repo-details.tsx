@@ -149,11 +149,15 @@ export default function RepoDetails({
 
   // If no valid owner/name, show loading state (check after all hooks)
   if (shouldSkip) {
-    return <LoadingState message="Loading repository..." />;
+    return (
+      <LoadingState message="Loading repository..." className="min-h-screen" />
+    );
   }
 
   if (loading) {
-    return <LoadingState message="Loading repository details..." />;
+    return (
+      <LoadingState message="Loading repository..." className="min-h-screen" />
+    );
   }
 
   if (error) {
