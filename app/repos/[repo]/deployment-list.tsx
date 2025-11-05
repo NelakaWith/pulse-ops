@@ -24,10 +24,9 @@ export default function DeploymentList({ deployments }: Props) {
             ? new Date(d.createdAt).toLocaleString()
             : "";
           const status = d?.latestStatus?.state ?? "";
-          const envUrl = d?.latestStatus?.environmentUrl ?? undefined;
           const logUrl = d?.latestStatus?.logUrl ?? undefined;
           // Prefer environmentUrl, then logUrl as a fallback for an "Open" link
-          const linkUrl = envUrl ?? logUrl ?? undefined;
+          const linkUrl = logUrl ?? undefined;
           const statusKey = (status || "").toLowerCase();
 
           const { textClass, bgClass, dotClass } = (() => {
@@ -67,22 +66,8 @@ export default function DeploymentList({ deployments }: Props) {
           return (
             <li key={id}>
               <div className="font-medium flex items-center gap-3">
-                {/* link icon and status on the left */}
+                {/* status on the left */}
                 <div className="flex items-center gap-3 min-w-28">
-                  {linkUrl ? (
-                    <a
-                      href={linkUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Open deployment ${env}`}
-                      className="text-muted-foreground hover:text-primary"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  ) : (
-                    <div className="w-4 h-4" />
-                  )}
-
                   <Badge
                     className={`${textClass} ${bgClass} inline-flex items-center gap-2`}
                   >
@@ -96,7 +81,20 @@ export default function DeploymentList({ deployments }: Props) {
 
                 {/* main content */}
                 <div className="flex-1">
-                  <div className="truncate">{env}</div>
+                  <div className="flex items-center gap-2">
+                    <div className="truncate">{env}</div>
+                    {linkUrl ? (
+                      <a
+                        href={linkUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open deployment ${env}`}
+                        className="text-muted-foreground hover:text-primary"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    ) : null}
+                  </div>
                   <div className="text-xs text-muted-foreground flex items-center gap-2">
                     {task ? <span>{task} •</span> : null}
                     {refName ? (
