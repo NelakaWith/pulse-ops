@@ -1,4 +1,4 @@
-import { RepoPageClient } from "./repo-page-client";
+import RepoDetails from "./repo-details";
 
 type Props = {
   params: Promise<{ repo: string }>;
@@ -10,7 +10,7 @@ async function RepoPage({ params }: Props) {
 
   return (
     <main className="p-8">
-      <RepoPageClient repoName={repoName} />
+      <RepoDetails name={repoName} />
     </main>
   );
 }
