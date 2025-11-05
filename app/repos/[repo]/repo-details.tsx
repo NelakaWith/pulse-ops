@@ -11,6 +11,7 @@ import { useGraphQL } from "@/hooks/use-graphql";
 import { useRepoParams } from "@/hooks/use-repo-params";
 import CommitList from "./commit-list";
 import PRList from "./pr-list";
+import DeploymentList from "./deployment-list";
 import LanguageUsage from "./language-usage";
 
 import type {
@@ -73,6 +74,35 @@ export default function RepoDetails({
             mergedAt
             state
             author { login avatarUrl }
+          }
+        }
+        releases(first: 20, orderBy: { field: CREATED_AT, direction: DESC }) {
+          nodes {
+            id
+            name
+            tagName
+            url
+            createdAt
+            publishedAt
+            isDraft
+            isPrerelease
+            author { login avatarUrl }
+          }
+        }
+        deployments(first: 20) {
+          nodes {
+            id
+            environment
+            createdAt
+            task
+            ref { name }
+            creator { login avatarUrl }
+            latestStatus {
+              state
+              createdAt
+              environmentUrl
+              logUrl
+            }
           }
         }
         owner { login avatarUrl }
@@ -233,6 +263,12 @@ export default function RepoDetails({
               <TabsTrigger value="prs" className="cursor-pointer">
                 Recent pull requests
               </TabsTrigger>
+              <TabsTrigger value="deployments" className="cursor-pointer">
+                Recent deployments
+              </TabsTrigger>
+              <TabsTrigger value="releases" className="cursor-pointer">
+                Recent releases
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="commits" className="flex-1 overflow-hidden">
               <ScrollArea className="h-full">
@@ -242,6 +278,18 @@ export default function RepoDetails({
             <TabsContent value="prs" className="flex-1 overflow-hidden">
               <ScrollArea className="h-full">
                 <PRList prs={pullRequests} />
+              </ScrollArea>
+            </TabsContent>
+            <TabsContent value="deployments" className="flex-1 overflow-hidden">
+              <ScrollArea className="h-full">
+                <DeploymentList deployments={repo.deployments?.nodes || []} />
+              </ScrollArea>
+            </TabsContent>
+            <TabsContent value="releases" className="flex-1 overflow-hidden">
+              <ScrollArea className="h-full">
+                <div className="p-4 text-sm text-muted-foreground">
+                  Release list component goes here.
+                </div>
               </ScrollArea>
             </TabsContent>
           </Tabs>

@@ -129,6 +129,51 @@ export type GraphQLPullRequestNode = {
   author?: GraphQLPullRequestAuthor | null;
 } | null;
 
+// --- Release shapes
+export type GraphQLReleaseAuthor = {
+  login?: string | null;
+  avatarUrl?: string | null;
+} | null;
+
+export type GraphQLReleaseNode = {
+  id?: string | null;
+  name?: string | null;
+  tagName?: string | null;
+  url?: string | null;
+  createdAt?: string | null;
+  publishedAt?: string | null;
+  isDraft?: boolean | null;
+  isPrerelease?: boolean | null;
+  author?: GraphQLReleaseAuthor | null;
+} | null;
+
+// --- Deployment shapes
+export type GraphQLDeploymentCreator = {
+  login?: string | null;
+  avatarUrl?: string | null;
+} | null;
+
+export type GraphQLDeploymentLatestStatus = {
+  state?: string | null;
+  createdAt?: string | null;
+  environmentUrl?: string | null;
+  logUrl?: string | null;
+} | null;
+
+export type GraphQLDeploymentRef = {
+  name?: string | null;
+} | null;
+
+export type GraphQLDeploymentNode = {
+  id?: string | null;
+  environment?: string | null;
+  createdAt?: string | null;
+  task?: string | null;
+  ref?: GraphQLDeploymentRef | null;
+  creator?: GraphQLDeploymentCreator | null;
+  latestStatus?: GraphQLDeploymentLatestStatus | null;
+} | null;
+
 export interface RepoLanguagesQuery {
   repository?: {
     languages?: {
@@ -179,6 +224,8 @@ export interface RepoDetailsQuery {
       } | null;
     } | null;
     pullRequests?: { nodes?: GraphQLPullRequestNode[] | null } | null;
+    releases?: { nodes?: GraphQLReleaseNode[] | null } | null;
+    deployments?: { nodes?: GraphQLDeploymentNode[] | null } | null;
   } | null;
 }
 
