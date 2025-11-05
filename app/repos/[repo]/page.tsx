@@ -1,11 +1,12 @@
 import ClientRepoDetails from "./client-repo-details";
 
 type Props = {
-  params: { repo: string };
+  params: Promise<{ repo: string }>;
 };
 
 async function RepoPage({ params }: Props) {
-  const repoName = params.repo ?? "";
+  const { repo } = await params;
+  const repoName = repo ?? "";
 
   return (
     <main className="p-8">
