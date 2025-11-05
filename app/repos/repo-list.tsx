@@ -9,8 +9,10 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { useUser } from "@/contexts/user-context";
 
 function RepoList() {
+  const { user } = useUser();
   const REPO_QUERY = React.useMemo(
     () => `
     query Repos($login: String!) {
@@ -38,7 +40,10 @@ function RepoList() {
     []
   );
 
-  const variables = React.useMemo(() => ({ login: "NelakaWith" }), []);
+  const variables = React.useMemo(
+    () => ({ login: user?.login ?? "NelakaWith" }),
+    [user?.login]
+  );
   const { data, loading, error } = useGraphQL<ReposQuery>(
     REPO_QUERY,
     variables

@@ -4,12 +4,14 @@ type Props = {
   params: { repo: string };
 };
 
-const OWNER = "NelakaWith";
+async function RepoPage({ params }: Props) {
+  const repoName = params.repo ?? "";
 
-export default async function RepoPage({ params }: Props) {
   return (
     <main className="p-8">
-      <ClientRepoDetails owner={OWNER} name={params.repo ?? ""} />
+      <ClientRepoDetails name={repoName} />
     </main>
   );
 }
+
+export default RepoPage;

@@ -1,6 +1,7 @@
 "use client";
 import { useMemo } from "react";
 import { useGraphQL } from "@/hooks/use-graphql";
+import { useUser } from "@/contexts/user-context";
 import UserMetrics from "./components/userMetrics";
 import ContributionChart from "./components/contributionChart";
 import LanguageUsage from "./components/languageUsage";
@@ -70,7 +71,11 @@ const USER_QUERY = `
 `;
 
 export default function MetricsPage() {
-  const variables = useMemo(() => ({ login: "NelakaWith" }), []);
+  const { user: currentUser } = useUser();
+  const variables = useMemo(
+    () => ({ login: currentUser?.login ?? "NelakaWith" }),
+    [currentUser?.login]
+  );
   const { data, loading, error } = useGraphQL<{ user: User }>(
     USER_QUERY,
     variables

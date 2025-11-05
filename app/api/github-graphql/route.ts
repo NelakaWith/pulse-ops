@@ -23,7 +23,7 @@ const QUERY = `
   }
 `;
 
-export async function GET() {
+export async function GET(req: Request) {
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
     return NextResponse.json(
@@ -33,6 +33,10 @@ export async function GET() {
   }
 
   try {
+    // Extract login from URL search params or use default
+    const { searchParams } = new URL(req.url);
+    const login = searchParams.get("login") ?? "NelakaWith";
+
     const res = await fetch(GITHUB_GRAPHQL, {
       method: "POST",
       headers: {
@@ -42,7 +46,7 @@ export async function GET() {
       },
       body: JSON.stringify({
         query: QUERY,
-        variables: { login: "NelakaWith" },
+        variables: { login },
       }),
     });
 

@@ -6,6 +6,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import DevHydrationDebug from "@/components/dev-hydration-debug";
 import { ThemeProvider } from "@/components/theme-provider";
+import { UserProvider } from "@/contexts/user-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,11 +49,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {process.env.NODE_ENV === "development" && <DevHydrationDebug />}
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="flex-1 w-full bg-background">{children}</main>
-          </SidebarProvider>
+          <UserProvider>
+            {process.env.NODE_ENV === "development" && <DevHydrationDebug />}
+            <SidebarProvider>
+              <AppSidebar />
+              <main className="flex-1 w-full bg-background">{children}</main>
+            </SidebarProvider>
+          </UserProvider>
         </ThemeProvider>
       </body>
     </html>

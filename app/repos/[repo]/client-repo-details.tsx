@@ -25,7 +25,7 @@ export default function ClientRepoDetails({
   owner,
   name,
 }: {
-  owner: string;
+  owner?: string;
   name: string;
 }) {
   const { owner: ownerToUse, name: nameToUse } = useRepoParams(owner, name);

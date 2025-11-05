@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useUser } from "@/contexts/user-context";
 
 /**
  * useRepoParams
@@ -8,15 +9,15 @@ import { usePathname } from "next/navigation";
  * Small hook to canonicalize repository owner/name values from either
  * - explicit props (owner, name) or
  * - the current pathname (supports /repos/:repo and /repos/:owner/:repo)
+ * - the current user context (for default owner)
  *
  * Returns an object with { owner, name } suitable for building API endpoints.
  */
-export function useRepoParams(
-  owner?: string,
-  name?: string,
-  defaultOwner = "NelakaWith"
-) {
+export function useRepoParams(owner?: string, name?: string) {
+  const { user } = useUser();
   const pathname = usePathname();
+
+  const defaultOwner = user?.login ?? "NelakaWith";
 
   let ownerToUse = owner ?? defaultOwner;
   let nameToUse = name ?? "";
