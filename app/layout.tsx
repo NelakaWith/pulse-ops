@@ -40,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en" {...devHtmlProps}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-y-hidden h-screen`}
       >
         <ThemeProvider
           attribute="class"

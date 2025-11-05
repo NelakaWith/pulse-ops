@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
  * By default, it takes full width and centers vertically in the available space.
  * For full-page loading, add 'min-h-screen' to className.
  *
+ * Automatically prevents body scrolling while displayed.
+ *
  * @param message - Optional loading message to display below spinner
  * @param className - Optional className for the container
  * @param spinnerClassName - Optional className for the spinner icon
