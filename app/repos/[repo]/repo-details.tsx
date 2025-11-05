@@ -12,6 +12,7 @@ import { useRepoParams } from "@/hooks/use-repo-params";
 import CommitList from "./commit-list";
 import PRList from "./pr-list";
 import DeploymentList from "./deployment-list";
+import ReleaseList from "./release-list";
 import LanguageUsage from "./language-usage";
 
 import type {
@@ -287,9 +288,7 @@ export default function RepoDetails({
             </TabsContent>
             <TabsContent value="releases" className="flex-1 overflow-hidden">
               <ScrollArea className="h-full">
-                <div className="p-4 text-sm text-muted-foreground">
-                  Release list component goes here.
-                </div>
+                <ReleaseList releases={repo.releases?.nodes || []} />
               </ScrollArea>
             </TabsContent>
           </Tabs>
