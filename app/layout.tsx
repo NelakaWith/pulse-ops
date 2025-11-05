@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
 import DevHydrationDebug from "@/components/dev-hydration-debug";
 import { ThemeProvider } from "@/components/theme-provider";
 import { UserProvider } from "@/contexts/user-context";
+import { ConditionalSidebar } from "@/components/conditional-sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,10 +50,7 @@ export default function RootLayout({
         >
           <UserProvider>
             {process.env.NODE_ENV === "development" && <DevHydrationDebug />}
-            <SidebarProvider>
-              <AppSidebar />
-              <main className="flex-1 w-full bg-background">{children}</main>
-            </SidebarProvider>
+            <ConditionalSidebar>{children}</ConditionalSidebar>
           </UserProvider>
         </ThemeProvider>
       </body>
