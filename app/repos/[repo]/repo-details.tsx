@@ -145,7 +145,7 @@ export default function RepoDetails({
       scope: "repo",
       task: "analyze",
     },
-    apiKey: process.env.PULSE_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_PULSE_API_KEY,
     skip: analysisRequested,
   });
 
