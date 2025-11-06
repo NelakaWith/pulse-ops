@@ -2,6 +2,50 @@ import { useCallback, useEffect, useState } from "react";
 import { useUser } from "@/contexts/user-context";
 import type { UseBackendApiOptions, UseBackendApiResponse } from "@/types";
 
+// Simple in-memory cache for API responses
+const apiCache = new Map<string, { data: unknown; timestamp: number }>();
+const CACHE_TTL = 15 * 60 * 1000; // 15 minutes
+
+// Track rate limit state
+const rateLimitState = {
+  retryAfter: 0,
+  lastRateLimitTime: 0,
+};
+
+/**
+ * Check if we're currently rate limited
+ */
+function isRateLimited(): boolean {
+  const now = Date.now();
+  if (rateLimitState.retryAfter > now) {
+    return true;
+  }
+  // Clear rate limit if enough time has passed
+  if (now - rateLimitState.lastRateLimitTime > rateLimitState.retryAfter) {
+    rateLimitState.retryAfter = 0;
+  }
+  return false;
+}
+
+/**
+ * Update rate limit state from response headers or body
+ */
+function updateRateLimit(response: Response | { retryAfter?: number }): void {
+  let retryAfter = 0;
+
+  if (response instanceof Response) {
+    const retryAfterHeader = response.headers.get("Retry-After");
+    retryAfter = retryAfterHeader
+      ? parseInt(retryAfterHeader, 10) * 1000
+      : 60000;
+  } else if (response.retryAfter) {
+    retryAfter = response.retryAfter * 1000;
+  }
+
+  rateLimitState.retryAfter = Date.now() + retryAfter;
+  rateLimitState.lastRateLimitTime = Date.now();
+}
+
 /**
  * Custom hook for making authenticated API calls to the backend service.
  *
@@ -79,8 +123,28 @@ export function useBackendApi<T = unknown>(
         headers["X-GitHub-User"] = user.login;
       }
 
-      // Build fetch URL
-      const fetchUrl = url.startsWith("http") ? url : `${url}`;
+      // Build fetch URL - prepend backend host if relative URL
+      const baseUrl =
+        process.env.PULSE_API_BASE_URL || "http://localhost:3000/api";
+      const fetchUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
+
+      // Check cache for GET requests
+      if (method === "GET") {
+        const cached = apiCache.get(fetchUrl);
+        if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+          setData(cached.data as T);
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Check rate limit before making request
+      if (isRateLimited()) {
+        const waitTime = Math.ceil(
+          (rateLimitState.retryAfter - Date.now()) / 1000
+        );
+        throw new Error(`Rate limited. Please retry after ${waitTime} seconds`);
+      }
 
       // Build fetch options
       const fetchOptions: RequestInit = {
@@ -97,9 +161,25 @@ export function useBackendApi<T = unknown>(
       // Make the request
       const response = await fetch(fetchUrl, fetchOptions);
 
+      // Handle rate limiting (429)
+      if (response.status === 429) {
+        updateRateLimit(response);
+        const retryAfterHeader = response.headers.get("Retry-After");
+        const retryAfter = retryAfterHeader
+          ? parseInt(retryAfterHeader, 10)
+          : 60;
+        throw new Error(`Rate limited. Retry after ${retryAfter} seconds`);
+      }
+
       // Handle non-2xx responses
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+
+        // Check for rate limit in response body
+        if (errorData.retryAfter) {
+          updateRateLimit(errorData);
+        }
+
         throw new Error(
           errorData.message ||
             `API Error: ${response.status} ${response.statusText}`
@@ -108,6 +188,15 @@ export function useBackendApi<T = unknown>(
 
       // Parse and return response data
       const result: T = await response.json();
+
+      // Cache GET requests
+      if (method === "GET") {
+        apiCache.set(fetchUrl, {
+          data: result,
+          timestamp: Date.now(),
+        });
+      }
+
       setData(result);
       setError(null);
     } catch (err) {
@@ -178,7 +267,9 @@ export async function callBackendApi<T = unknown>(
     headers["X-API-Key"] = apiKey;
   }
 
-  const fetchUrl = url.startsWith("http") ? url : `${url}`;
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
+  const fetchUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
 
   const fetchOptions: RequestInit = {
     method,

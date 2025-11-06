@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGraphQL } from "@/hooks/use-graphql";
 import { useRepoParams } from "@/hooks/use-repo-params";
+import { useBackendApi } from "@/hooks/use-backend-api";
 import CommitList from "./commit-list";
 import PRList from "./pr-list";
 import DeploymentList from "./deployment-list";
@@ -131,6 +132,29 @@ export default function RepoDetails({
   );
 
   const repo = (data && data.repository) ?? null;
+
+  // Track if analysis has been requested to prevent duplicate calls
+  const [analysisRequested, setAnalysisRequested] = React.useState(false);
+
+  // Fetch repository analysis from backend (not used in UI yet)
+  useBackendApi(repo && !analysisRequested ? "/enrichment" : null, {
+    method: "POST",
+    body: {
+      owner: ownerToUse,
+      name: nameToUse,
+      scope: "repo",
+      task: "analyze",
+    },
+    apiKey: process.env.PULSE_API_KEY,
+    skip: analysisRequested,
+  });
+
+  // Mark analysis as requested once repo data is available
+  React.useEffect(() => {
+    if (repo && !analysisRequested) {
+      setAnalysisRequested(true);
+    }
+  }, [repo, analysisRequested]);
 
   const chartData = React.useMemo<LanguageChartEntry[]>(() => {
     const edges = ((data &&
