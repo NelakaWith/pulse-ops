@@ -3,6 +3,8 @@
 import React from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { LoadingState } from "@/components/loading-state";
+import { NoDataCard } from "@/components/no-data-card";
+import { StatusCard } from "@/components/status-card";
 import { useGraphQL } from "@/hooks/use-graphql";
 import type { ReposQuery } from "@/types";
 import Image from "next/image";
@@ -60,7 +62,16 @@ function RepoList() {
           className="min-h-screen"
         />
       ) : error ? (
-        <p className="text-red-500 p-8">Error: {error.message}</p>
+        <StatusCard
+          status="error"
+          title="Failed to Load Repositories"
+          message={error.message}
+        />
+      ) : repos.length === 0 ? (
+        <NoDataCard
+          title="No Repositories"
+          message="No repositories found for this user."
+        />
       ) : (
         <section className="w-full">
           <div className="grid grid-cols-4 gap-4 mt-4">
