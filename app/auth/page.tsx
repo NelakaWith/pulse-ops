@@ -13,6 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { InfoIcon } from "lucide-react";
+import GitHubIcon from "@/components/icons/git-hub";
 
 function AuthPage() {
   const router = useRouter();
@@ -89,17 +91,29 @@ function AuthPage() {
               />
               {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
-
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Verifying..." : "Continue"}
             </Button>
-
             {user && (
               <p className="text-center text-sm text-muted-foreground">
                 Currently signed in as:{" "}
                 <span className="font-medium">{user.login}</span>
               </p>
             )}
+            <div className="flex items-center text-neutral-200 gap-1 text-xs">
+              <InfoIcon className="h-6 w-6" /> This login is for public
+              repositories only. If you need to access private repositories,
+              please use GitHub login.
+            </div>
+            <Button
+              variant="outline"
+              type="submit"
+              className="w-full"
+              disabled={true}
+            >
+              <GitHubIcon />
+              Login with GitHub (Coming Soon)
+            </Button>
           </form>
         </CardContent>
       </Card>
