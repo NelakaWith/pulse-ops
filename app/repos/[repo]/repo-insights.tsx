@@ -2,6 +2,8 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NoDataCard } from "@/components/no-data-card";
+import { StatusCard } from "@/components/status-card";
 import { Markdown } from "@/components/markdown";
 import { LoadingState } from "@/components/loading-state";
 
@@ -24,37 +26,20 @@ export default function RepoInsights({
 
   if (error) {
     return (
-      <div className="mt-4">
-        <Card className="border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950">
-          <CardHeader>
-            <CardTitle className="text-amber-700 dark:text-amber-400">
-              Error Loading Insights
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-amber-600 dark:text-amber-300">
-              {error.message}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <StatusCard
+        status="warning"
+        title="Error Loading Insights"
+        message={error.message}
+      />
     );
   }
 
   if (!data) {
     return (
-      <div className="mt-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>No Insights Available</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground">
-              Unable to generate insights at this time. Please try again later.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <NoDataCard
+        title="No Insights Available"
+        message="Unable to generate insights at this time. Please try again later."
+      />
     );
   }
 
@@ -63,20 +48,11 @@ export default function RepoInsights({
     const dataObj = data as Record<string, unknown>;
     if ("__error" in dataObj && typeof dataObj.__error === "string") {
       return (
-        <div className="mt-4">
-          <Card className="border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950">
-            <CardHeader>
-              <CardTitle className="text-amber-700 dark:text-amber-400">
-                Insights are not available at the moment!
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-amber-600 dark:text-amber-300">
-                {dataObj.__error}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        <StatusCard
+          status="warning"
+          title="Insights are not available at the moment!"
+          message={dataObj.__error}
+        />
       );
     }
   }
