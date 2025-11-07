@@ -106,6 +106,17 @@ export function useBackendApi<T = unknown>(
     setLoading(true);
     setError(null);
 
+    // Build URL and cache key first (outside try block so we can cache errors)
+    const baseUrl =
+      process.env.PULSE_API_BASE_URL || "http://localhost:3000/api";
+    const fetchUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
+
+    // Create cache key that includes body for POST requests
+    const cacheKey =
+      method === "POST" && body
+        ? `${fetchUrl}:${JSON.stringify(body)}`
+        : fetchUrl;
+
     try {
       // Build headers with API key authentication
       const headers: Record<string, string> = {
@@ -122,17 +133,6 @@ export function useBackendApi<T = unknown>(
       if (user?.login) {
         headers["X-GitHub-User"] = user.login;
       }
-
-      // Build fetch URL - prepend backend host if relative URL
-      const baseUrl =
-        process.env.PULSE_API_BASE_URL || "http://localhost:3000/api";
-      const fetchUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
-
-      // Create cache key that includes body for POST requests
-      const cacheKey =
-        method === "POST" && body
-          ? `${fetchUrl}:${JSON.stringify(body)}`
-          : fetchUrl;
 
       // Check cache for GET and POST requests
       const cached = apiCache.get(cacheKey);
@@ -206,6 +206,12 @@ export function useBackendApi<T = unknown>(
       setError(error);
       setData(null);
       console.error(`Backend API error (${method} ${url}):`, error);
+
+      // Cache the error for 60 seconds to prevent hammering the backend
+      apiCache.set(cacheKey, {
+        data: { __error: error.message },
+        timestamp: Date.now(),
+      });
     } finally {
       setLoading(false);
     }

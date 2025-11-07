@@ -24,15 +24,17 @@ export default function RepoInsights({
 
   if (error) {
     return (
-      <div className="p-6">
-        <Card className="border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950">
+      <div className="mt-4">
+        <Card className="border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950">
           <CardHeader>
-            <CardTitle className="text-red-700 dark:text-red-400">
+            <CardTitle className="text-amber-700 dark:text-amber-400">
               Error Loading Insights
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-red-600 dark:text-red-300">{error.message}</p>
+            <p className="text-amber-600 dark:text-amber-300">
+              {error.message}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -41,7 +43,7 @@ export default function RepoInsights({
 
   if (!data) {
     return (
-      <div className="p-6">
+      <div className="mt-4">
         <Card>
           <CardHeader>
             <CardTitle>No Insights Available</CardTitle>
@@ -54,6 +56,29 @@ export default function RepoInsights({
         </Card>
       </div>
     );
+  }
+
+  // Check if data is a cached error
+  if (typeof data === "object" && data !== null) {
+    const dataObj = data as Record<string, unknown>;
+    if ("__error" in dataObj && typeof dataObj.__error === "string") {
+      return (
+        <div className="mt-4">
+          <Card className="border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950">
+            <CardHeader>
+              <CardTitle className="text-amber-700 dark:text-amber-400">
+                Insights are not available at the moment!
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-amber-600 dark:text-amber-300">
+                {dataObj.__error}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
   }
 
   // Extract analysis content - adjust based on your API response structure
@@ -86,7 +111,7 @@ export default function RepoInsights({
 
   return (
     <main className="w-full">
-      <section className="p-6">
+      <div className="mt-4">
         <Card>
           <CardHeader>
             <CardTitle>Repository Insights</CardTitle>
@@ -95,7 +120,7 @@ export default function RepoInsights({
             <Markdown content={analysisContent} />
           </CardContent>
         </Card>
-      </section>
+      </div>
     </main>
   );
 }
