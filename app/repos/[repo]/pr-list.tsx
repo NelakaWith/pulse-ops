@@ -1,13 +1,21 @@
 "use client";
 
 import type { GraphQLPullRequestNode } from "@/types";
+import { NoDataCard } from "@/components/no-data-card";
 
 type Props = {
   prs: (GraphQLPullRequestNode | null)[];
 };
 
 export default function PRList({ prs }: Props) {
-  if (!prs || prs.length === 0) return null;
+  if (!prs || prs.length === 0) {
+    return (
+      <NoDataCard
+        title="No Pull Requests"
+        message="No pull requests found for this repository."
+      />
+    );
+  }
 
   return (
     <section className="w-full">

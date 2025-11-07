@@ -3,13 +3,21 @@
 import type { GraphQLReleaseNode } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Tag } from "lucide-react";
+import { NoDataCard } from "@/components/no-data-card";
 
 type Props = {
   releases: (GraphQLReleaseNode | null)[];
 };
 
 export default function ReleaseList({ releases }: Props) {
-  if (!releases || releases.length === 0) return null;
+  if (!releases || releases.length === 0) {
+    return (
+      <NoDataCard
+        title="No Releases"
+        message="No releases found for this repository."
+      />
+    );
+  }
 
   return (
     <section className="w-full">

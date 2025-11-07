@@ -3,13 +3,21 @@
 import type { GraphQLDeploymentNode } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Tag, ExternalLink } from "lucide-react";
+import { NoDataCard } from "@/components/no-data-card";
 
 type Props = {
   deployments: (GraphQLDeploymentNode | null)[];
 };
 
 export default function DeploymentList({ deployments }: Props) {
-  if (!deployments || deployments.length === 0) return null;
+  if (!deployments || deployments.length === 0) {
+    return (
+      <NoDataCard
+        title="No Deployments"
+        message="No deployments found for this repository."
+      />
+    );
+  }
 
   return (
     <section className="w-full">

@@ -1,6 +1,7 @@
 "use client";
 
 import type { GraphQLCommitNode } from "@/types";
+import { NoDataCard } from "@/components/no-data-card";
 
 type Props = {
   commits: (GraphQLCommitNode | null)[];
@@ -8,7 +9,14 @@ type Props = {
 };
 
 export default function CommitList({ commits, repoUrl }: Props) {
-  if (!commits || commits.length === 0) return null;
+  if (!commits || commits.length === 0) {
+    return (
+      <NoDataCard
+        title="No Commits"
+        message="No commits found for this repository."
+      />
+    );
+  }
 
   return (
     <section className="w-full">
