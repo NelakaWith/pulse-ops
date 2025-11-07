@@ -2,9 +2,11 @@ import Image from "next/image";
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { FolderGit, GitGraph, GitPullRequestArrow, Rocket } from "lucide-react";
+import { StatusCard } from "@/components/status-card";
+import { NoDataCard } from "@/components/no-data-card";
 import type { UserMetricsProps } from "@/types";
 
-function UserMetrics({ user, error, data }: UserMetricsProps) {
+function UserMetrics({ user, error }: UserMetricsProps) {
   const totalReleases = useMemo(() => {
     const nodes = user?.repositories?.nodes ?? [];
     return nodes.reduce(
@@ -53,7 +55,13 @@ function UserMetrics({ user, error, data }: UserMetricsProps) {
   }, [user, totalReleases]);
 
   if (error) {
-    return <p className="text-red-500">Error: {error.message}</p>;
+    return (
+      <StatusCard
+        status="error"
+        title="Failed to Load User Metrics"
+        message={error.message}
+      />
+    );
   }
 
   return (
@@ -102,9 +110,10 @@ function UserMetrics({ user, error, data }: UserMetricsProps) {
           </div>
         </div>
       ) : (
-        <pre className="bg-card p-4 rounded mt-2 overflow-x-auto">
-          {data ? JSON.stringify(data, null, 2) : "No data"}
-        </pre>
+        <NoDataCard
+          title="No User Data"
+          message="Unable to load user metrics at this time."
+        />
       )}
     </section>
   );

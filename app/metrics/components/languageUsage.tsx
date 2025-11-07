@@ -8,6 +8,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { NoDataCard } from "@/components/no-data-card";
 import type { LanguageUsageProps } from "@/types";
 
 const chartConfig = {
@@ -55,12 +56,7 @@ function LanguageUsage({ repositories }: LanguageUsageProps) {
 
   if (!repositories?.nodes || chartData.length === 0) {
     return (
-      <div className="p-4 border rounded-lg">
-        <h3 className="text-lg font-semibold mb-2">Language Usage</h3>
-        <p className="text-sm text-muted-foreground">
-          No language data available
-        </p>
-      </div>
+      <NoDataCard title="Language Usage" message="No language data available" />
     );
   }
 

@@ -8,6 +8,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { NoDataCard } from "@/components/no-data-card";
 import type { ContributionCalendar } from "@/types";
 
 type ContributionChartProps = {
@@ -55,12 +56,10 @@ function ContributionChart({ contributionCalendar }: ContributionChartProps) {
 
   if (!contributionCalendar?.weeks || chartData.length === 0) {
     return (
-      <div className="p-4 border rounded-lg">
-        <h3 className="text-lg font-semibold mb-2">Contribution Chart</h3>
-        <p className="text-sm text-muted-foreground">
-          No contribution data available
-        </p>
-      </div>
+      <NoDataCard
+        title="Contribution Chart"
+        message="No contribution data available"
+      />
     );
   }
 
