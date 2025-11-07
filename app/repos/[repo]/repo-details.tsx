@@ -15,6 +15,7 @@ import PRList from "./pr-list";
 import DeploymentList from "./deployment-list";
 import ReleaseList from "./release-list";
 import LanguageUsage from "./language-usage";
+import RepoInsights from "./repo-insights";
 
 import type {
   RepoDetailsQuery,
@@ -23,6 +24,7 @@ import type {
   GraphQLPullRequestNode,
   GraphQLCommitNode,
 } from "@/types";
+import { Sparkles } from "lucide-react";
 
 export default function RepoDetails({
   owner,
@@ -133,28 +135,27 @@ export default function RepoDetails({
 
   const repo = (data && data.repository) ?? null;
 
-  // Track if analysis has been requested to prevent duplicate calls
-  const [analysisRequested, setAnalysisRequested] = React.useState(false);
-
-  // Fetch repository analysis from backend (not used in UI yet)
-  useBackendApi(repo && !analysisRequested ? "/enrichment" : null, {
-    method: "POST",
-    body: {
+  // Memoize the body to prevent recreating it on every render
+  const enrichmentBody = React.useMemo(
+    () => ({
       owner: ownerToUse,
       name: nameToUse,
-      scope: "repo",
-      task: "analyze",
-    },
-    apiKey: process.env.NEXT_PUBLIC_PULSE_API_KEY,
-    skip: analysisRequested,
-  });
+      scope: "repo" as const,
+      task: "analyze" as const,
+    }),
+    [ownerToUse, nameToUse]
+  );
 
-  // Mark analysis as requested once repo data is available
-  React.useEffect(() => {
-    if (repo && !analysisRequested) {
-      setAnalysisRequested(true);
-    }
-  }, [repo, analysisRequested]);
+  // Fetch repository analysis from backend (will be cached after first request)
+  const {
+    data: analysisData,
+    loading: analysisLoading,
+    error: analysisError,
+  } = useBackendApi(repo ? "/enrichment" : null, {
+    method: "POST",
+    body: enrichmentBody,
+    apiKey: process.env.NEXT_PUBLIC_PULSE_API_KEY,
+  });
 
   const chartData = React.useMemo<LanguageChartEntry[]>(() => {
     const edges = ((data &&
@@ -294,6 +295,9 @@ export default function RepoDetails({
               <TabsTrigger value="releases" className="cursor-pointer">
                 Recent releases
               </TabsTrigger>
+              <TabsTrigger value="insights" className="cursor-pointer">
+                AI Insights <Sparkles className="text-amber-300" />
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="commits" className="flex-1 overflow-hidden">
               <ScrollArea className="h-full">
@@ -313,6 +317,15 @@ export default function RepoDetails({
             <TabsContent value="releases" className="flex-1 overflow-hidden">
               <ScrollArea className="h-full">
                 <ReleaseList releases={repo.releases?.nodes || []} />
+              </ScrollArea>
+            </TabsContent>
+            <TabsContent value="insights" className="flex-1 overflow-hidden">
+              <ScrollArea className="h-full">
+                <RepoInsights
+                  data={analysisData}
+                  loading={analysisLoading}
+                  error={analysisError}
+                />
               </ScrollArea>
             </TabsContent>
           </Tabs>

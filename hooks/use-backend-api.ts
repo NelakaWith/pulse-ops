@@ -128,14 +128,18 @@ export function useBackendApi<T = unknown>(
         process.env.PULSE_API_BASE_URL || "http://localhost:3000/api";
       const fetchUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
 
-      // Check cache for GET requests
-      if (method === "GET") {
-        const cached = apiCache.get(fetchUrl);
-        if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-          setData(cached.data as T);
-          setLoading(false);
-          return;
-        }
+      // Create cache key that includes body for POST requests
+      const cacheKey =
+        method === "POST" && body
+          ? `${fetchUrl}:${JSON.stringify(body)}`
+          : fetchUrl;
+
+      // Check cache for GET and POST requests
+      const cached = apiCache.get(cacheKey);
+      if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+        setData(cached.data as T);
+        setLoading(false);
+        return;
       }
 
       // Check rate limit before making request
@@ -189,13 +193,11 @@ export function useBackendApi<T = unknown>(
       // Parse and return response data
       const result: T = await response.json();
 
-      // Cache GET requests
-      if (method === "GET") {
-        apiCache.set(fetchUrl, {
-          data: result,
-          timestamp: Date.now(),
-        });
-      }
+      // Cache both GET and POST requests using same key
+      apiCache.set(cacheKey, {
+        data: result,
+        timestamp: Date.now(),
+      });
 
       setData(result);
       setError(null);
