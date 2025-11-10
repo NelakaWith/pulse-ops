@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import { useUser } from "@/contexts/user-context";
 import type { UseBackendApiOptions, UseBackendApiResponse } from "@/types";
 
@@ -30,15 +31,18 @@ function isRateLimited(): boolean {
 /**
  * Update rate limit state from response headers or body
  */
-function updateRateLimit(response: Response | { retryAfter?: number }): void {
+function updateRateLimit(
+  response: AxiosResponse | { retryAfter?: number }
+): void {
   let retryAfter = 0;
 
-  if (response instanceof Response) {
-    const retryAfterHeader = response.headers.get("Retry-After");
+  if (response && "headers" in response) {
+    const retryAfterHeader =
+      response.headers["retry-after"] || response.headers["Retry-After"];
     retryAfter = retryAfterHeader
-      ? parseInt(retryAfterHeader, 10) * 1000
+      ? parseInt(String(retryAfterHeader), 10) * 1000
       : 60000;
-  } else if (response.retryAfter) {
+  } else if (response && "retryAfter" in response && response.retryAfter) {
     retryAfter = response.retryAfter * 1000;
   }
 
@@ -91,7 +95,6 @@ export function useBackendApi<T = unknown>(
     method = "GET",
     headers: customHeaders = {},
     body,
-    cache = "default",
     apiKey,
   } = options;
 
@@ -150,34 +153,36 @@ export function useBackendApi<T = unknown>(
         throw new Error(`Rate limited. Please retry after ${waitTime} seconds`);
       }
 
-      // Build fetch options
-      const fetchOptions: RequestInit = {
+      // Make the request using axios
+      const axiosConfig: AxiosRequestConfig = {
         method,
+        url: fetchUrl,
         headers,
-        cache: cache as RequestCache,
+        timeout: 30000, // 30 second timeout
+        validateStatus: () => true, // Don't throw on any status code
       };
 
       // Add body if present
       if (body) {
-        fetchOptions.body = JSON.stringify(body);
+        axiosConfig.data = body;
       }
 
-      // Make the request
-      const response = await fetch(fetchUrl, fetchOptions);
+      const response = await axios(axiosConfig);
 
       // Handle rate limiting (429)
       if (response.status === 429) {
         updateRateLimit(response);
-        const retryAfterHeader = response.headers.get("Retry-After");
+        const retryAfterHeader =
+          response.headers["retry-after"] || response.headers["Retry-After"];
         const retryAfter = retryAfterHeader
-          ? parseInt(retryAfterHeader, 10)
+          ? parseInt(String(retryAfterHeader), 10)
           : 60;
         throw new Error(`Rate limited. Retry after ${retryAfter} seconds`);
       }
 
       // Handle non-2xx responses
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+      if (response.status < 200 || response.status >= 300) {
+        const errorData = response.data || {};
 
         // Check for rate limit in response body
         if (errorData.retryAfter) {
@@ -190,8 +195,8 @@ export function useBackendApi<T = unknown>(
         );
       }
 
-      // Parse and return response data
-      const result: T = await response.json();
+      // Parse and return response data (axios automatically parses JSON)
+      const result: T = response.data;
 
       // Cache both GET and POST requests using same key
       apiCache.set(cacheKey, {
@@ -215,7 +220,7 @@ export function useBackendApi<T = unknown>(
     } finally {
       setLoading(false);
     }
-  }, [url, skip, method, body, customHeaders, cache, apiKey, user?.login]);
+  }, [url, skip, method, body, customHeaders, apiKey, user?.login]);
 
   // Auto-fetch on mount or when dependencies change
   useEffect(() => {
@@ -256,15 +261,9 @@ export function useBackendApi<T = unknown>(
  */
 export async function callBackendApi<T = unknown>(
   url: string,
-  options: Omit<UseBackendApiOptions, "skip"> = {}
+  options: Omit<UseBackendApiOptions, "skip" | "cache"> = {}
 ): Promise<T> {
-  const {
-    method = "GET",
-    headers: customHeaders = {},
-    body,
-    cache = "default",
-    apiKey,
-  } = options;
+  const { method = "GET", headers: customHeaders = {}, body, apiKey } = options;
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -279,25 +278,27 @@ export async function callBackendApi<T = unknown>(
     process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3000";
   const fetchUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
 
-  const fetchOptions: RequestInit = {
+  const axiosConfig: AxiosRequestConfig = {
     method,
+    url: fetchUrl,
     headers,
-    cache: cache as RequestCache,
+    timeout: 30000,
+    validateStatus: () => true,
   };
 
   if (body) {
-    fetchOptions.body = JSON.stringify(body);
+    axiosConfig.data = body;
   }
 
-  const response = await fetch(fetchUrl, fetchOptions);
+  const response = await axios(axiosConfig);
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
+  if (response.status < 200 || response.status >= 300) {
+    const errorData = response.data || {};
     throw new Error(
       errorData.message ||
         `API Error: ${response.status} ${response.statusText}`
     );
   }
 
-  return response.json() as Promise<T>;
+  return response.data as T;
 }
