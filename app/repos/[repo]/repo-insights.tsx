@@ -13,6 +13,14 @@ interface RepoInsightsProps {
   error: Error | null;
 }
 
+interface AnalysisResponse {
+  data: {
+    analysis: {
+      raw: string;
+    };
+  };
+}
+
 export default function RepoInsights({
   data,
   loading,
@@ -57,34 +65,6 @@ export default function RepoInsights({
     }
   }
 
-  // Extract analysis content - adjust based on your API response structure
-  let analysisContent = "";
-
-  if (typeof data === "object" && data !== null) {
-    const dataObj = data as Record<string, unknown>;
-    // Handle nested response: { success, data: { analysis: "..." } }
-    if (
-      "data" in dataObj &&
-      typeof dataObj.data === "object" &&
-      dataObj.data !== null
-    ) {
-      const innerData = dataObj.data as Record<string, unknown>;
-      if ("analysis" in innerData && typeof innerData.analysis === "string") {
-        analysisContent = innerData.analysis;
-      }
-    }
-    // Handle direct response: { analysis: "..." }
-    else if ("analysis" in dataObj && typeof dataObj.analysis === "string") {
-      analysisContent = dataObj.analysis;
-    }
-  }
-
-  // Fallback to string representation if still empty
-  if (!analysisContent) {
-    analysisContent =
-      typeof data === "string" ? data : JSON.stringify(data, null, 2);
-  }
-
   return (
     <main className="w-full">
       <div className="mt-4">
@@ -93,7 +73,7 @@ export default function RepoInsights({
             <CardTitle>Repository Insights</CardTitle>
           </CardHeader>
           <CardContent>
-            <Markdown content={analysisContent} />
+            <Markdown content={(data as AnalysisResponse).data.analysis.raw} />
           </CardContent>
         </Card>
       </div>
